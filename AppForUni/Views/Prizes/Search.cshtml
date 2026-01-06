@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "ค้นหาผู้ได้รับรางวัล";
+    string popupTitle = (string)(ViewBag.PopupTitle ?? "");
+    string popupMsg = (string)(ViewBag.PopupMessage ?? "");
+    string popupType = (string)(ViewBag.PopupType ?? ""); // success/info/error
+}
+
+<h2>ค้นหาผู้ได้รับรางวัล</h2>
+
+<form asp-action="Search" method="post" style="margin-bottom:14px;">
+    @Html.AntiForgeryToken()
+    <label style="font-weight:700;">EmployeeID</label><br />
+    <input id="empSearch" type="text" name="employeeId"
+           style="width:360px; padding:10px; font-size:18px;"
+           placeholder="กรอก/สแกน EmployeeID แล้วกด Enter" autofocus />
+    <button type="submit" style="padding:10px 14px; font-size:16px;">ค้นหา</button>
+</form>
+
+<hr />
+<a asp-action="Select"><button type="button">กลับหน้าเลือกรางวัล</button></a>
+
+<!-- Modal แบบไม่พึ่ง Bootstrap -->
+<div id="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.45);">
+    <div style="width:min(520px, 92vw); margin:12vh auto; background:#fff; border-radius:10px; overflow:hidden;">
+        <div id="modalHeader" style="padding:14px 16px; font-weight:700; font-size:20px; border-bottom:1px solid #eee;">
+            Title
+        </div>
+        <div style="padding:16px;">
+            <div id="modalBody" style="font-size:18px; line-height:1.4;"></div>
+            <div style="margin-top:16px; text-align:right;">
+                <button type="button" onclick="closeModal()" style="padding:10px 14px;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(title, msg, type) {
+      document.getElementById('modalHeader').textContent = title;
+      document.getElementById('modalBody').textContent = msg || "";
+      // สีหัว modal ตาม type แบบง่าย ๆ
+      const header = document.getElementById('modalHeader');
+      header.style.background = (type === "success") ? "#d1e7dd" : (type === "error") ? "#f8d7da" : "#cff4fc";
+      document.getElementById('modal').style.display = "block";
+    }
+    function closeModal() {
+      document.getElementById('modal').style.display = "none";
+      document.getElementById('empSearch').focus();
+    }
+
+    // ถ้ามีผลลัพธ์จาก server ให้ popup ทันที
+    const popupTitle = "@popupTitle";
+    const popupMsg = "@popupMsg";
+    const popupType = "@popupType";
+    if (popupTitle) {
+      openModal(popupTitle, popupMsg, popupType);
+    }
+</script>

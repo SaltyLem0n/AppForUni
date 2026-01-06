@@ -1,0 +1,63 @@
+﻿@model YourApp.Models.Employee
+@{
+    ViewData["Title"] = "ประกาศรางวัล";
+    var prizeName = (string)(ViewBag.PrizeName ?? "");
+    var prizeAmount = (string)(ViewBag.PrizeAmount ?? "");
+}
+
+<h2>ประกาศรางวัล</h2>
+
+<div style="border:1px solid #ddd; padding:12px; margin-bottom:12px;">
+    <div style="font-size:24px; font-weight:700;">@prizeName</div>
+    <div style="font-size:18px;">@prizeAmount</div>
+</div>
+
+@if (ViewBag.Error != null)
+{
+    <div style="padding:10px; border:1px solid #f5c2c7; background:#f8d7da; margin-bottom:10px;">
+        <b>ERROR:</b> @ViewBag.Error
+    </div>
+}
+@if (ViewBag.Success != null)
+{
+    <div style="padding:10px; border:1px solid #badbcc; background:#d1e7dd; margin-bottom:10px;">
+        <b>SUCCESS:</b> @ViewBag.Success
+    </div>
+}
+
+<form asp-action="Announce" method="post" style="margin-bottom:14px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="prizeName" value="@prizeName" />
+    <input type="hidden" name="prizeAmount" value="@prizeAmount" />
+
+    <label style="font-weight:700;">สแกนบาร์โค้ด (EmployeeID)</label><br />
+    <input id="scanBox" type="text" name="scannedCode"
+           style="width:360px; padding:10px; font-size:18px;"
+           placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
+    <button type="submit" style="padding:10px 14px; font-size:16px;">บันทึกผลรางวัล</button>
+</form>
+
+@if (Model != null)
+{
+    <div style="border:1px solid #ddd; padding:12px;">
+        <h3>ข้อมูลพนักงาน</h3>
+        <p><b>EmployeeID:</b> @Model.EmployeeID</p>
+        <p><b>EmployeeName:</b> @Model.EmployeeName</p>
+        <p><b>Department:</b> @Model.Department</p>
+    </div>
+}
+
+<hr />
+<div style="display:flex; gap:10px;">
+    <a asp-action="Select"><button type="button">กลับหน้าเลือกรางวัล</button></a>
+    <a asp-action="Search"><button type="button">ค้นหาผู้ได้รับรางวัล</button></a>
+</div>
+
+<script>
+    // เครื่องสแกนส่วนใหญ่ส่ง Enter ท้ายสตริงอยู่แล้ว -> submit อัตโนมัติ
+    document.getElementById('scanBox').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        // ให้ form submit ตามปกติ
+      }
+    });
+</script>

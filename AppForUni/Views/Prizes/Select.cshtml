@@ -1,0 +1,28 @@
+﻿@model List<(string PrizeName, string PrizeAmount)>
+@{
+    ViewData["Title"] = "เลือกรางวัล";
+}
+
+<h2>เลือกรางวัล</h2>
+<p>เลือก 1 ปุ่มเพื่อไปหน้า “ประกาศรางวัล”</p>
+
+<div style="display:grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap:12px; max-width:700px;">
+    @foreach (var p in Model)
+    {
+        <a asp-action="Announce"
+           asp-route-prizeName="@p.PrizeName"
+           asp-route-prizeAmount="@p.PrizeAmount"
+           style="text-decoration:none;">
+            <button type="button" style="width:100%; padding:14px; font-size:16px;">
+                @p.PrizeName<br />
+                <span style="font-size:13px; color:#333;">@p.PrizeAmount</span>
+            </button>
+        </a>
+    }
+</div>
+
+<hr />
+<div style="display:flex; gap:10px;">
+    <a asp-controller="Employees" asp-action="Index"><button type="button">กลับหน้า Import</button></a>
+    <a asp-action="Search"><button type="button">ค้นหาผู้ได้รับรางวัล</button></a>
+</div>
