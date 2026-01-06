@@ -1,0 +1,85 @@
+﻿@page {
+    size: A4;
+    margin: 8mm;
+}
+
+body {
+    font-family: Tahoma, Arial, sans-serif;
+    color: #111;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8mm;
+}
+
+.sheet {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+}
+/* 2 columns × 5 rows = 10 tickets/page */
+.coupon {
+    position: relative;
+    width: 99mm;
+    height: 56mm;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    padding: 4mm 4mm;
+}
+/* Header matches image */
+.c-header {
+    font-weight: 700;
+    font-size: 18pt;
+    line-height: 1.1;
+}
+
+.c-f5 {
+    position: absolute;
+    top: 10mm;
+    right: 10mm;
+    font-size: 10pt;
+    font-weight: 400;
+}
+/* "Prize" text matches image size */
+.c-prize {
+    margin-top: 2mm;
+    font-weight: 700;
+    font-size: 22pt;
+}
+/* Data line (position matches image) */
+.c-div {
+    margin-top: 4mm;
+    font-size: 11pt;
+}
+
+.c-empname {
+    margin-top: 2mm;
+    font-size: 11pt;
+}
+
+.token {
+    color: #222;
+    margin-right: 6mm;
+}
+/* Barcode at the bottom */
+.c-barcode {
+    position: absolute;
+    left: 8mm;
+    right: 8mm;
+    bottom: 6mm;
+    height: 12mm;
+    width: auto;
+}
+/* Print mode */
+@media print {
+    .toolbar {
+        display: none;
+    }
+
+    .coupon {
+        page-break-inside: avoid;
+    }
+}

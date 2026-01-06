@@ -1,0 +1,39 @@
+﻿@model List<YourApp.Models.Employee>
+@{
+    ViewData["Title"] = "Import Employees";
+}
+
+<h2>Import Employees</h2>
+
+@if (TempData["Msg"] != null)
+{
+    <div class="alert alert-info">@TempData["Msg"]</div>
+}
+
+<form asp-action="ImportExcel" method="post" enctype="multipart/form-data" class="mb-3">
+    @Html.AntiForgeryToken()
+    <div class="input-group">
+        <input type="file" name="excelFile" accept=".xlsx" class="form-control" />
+        <button type="submit" class="btn btn-primary">Upload & Import</button>
+        <a asp-action="Coupons" class="btn btn-success ms-2">Go to Print Coupons</a>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Department</th>
+        </tr>    </thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.EmployeeID</td>
+                <td>@e.EmployeeName</td>
+                <td>@e.Department</td>
+            </tr>
+        }
+    </tbody>
+</table>

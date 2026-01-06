@@ -1,0 +1,42 @@
+﻿@model List<YourApp.ViewModels.EmployeeCouponVM>
+@{
+    ViewData["Title"] = "Raffle Coupons"; Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/coupons.css" />
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="window.history.back()">Back</button>
+        <button onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    @{
+        int perPage = 10;
+    }
+    @for (int i = 0; i < Model.Count; i += perPage)
+    {
+        <div class="sheet">
+            @foreach (var item in Model.Skip(i).Take(perPage))
+            {
+                <div class="coupon">
+                    <div class="c-header">@item.Department</div>
+                   
+                    
+                    
+                    
+                    <div class="c-empname">
+                        <span class="token">ID</span><span>@item.EmployeeID</span>
+                        <span style="margin-left:10mm;" class="token">Name</span><span>@item.EmployeeName</span>
+                    </div>
+                    <img class="c-barcode" src="@item.BarcodeDataUri" />
+                </div>
+            }
+        </div>
+        <div style="page-break-after: always;"></div>
+    }
+</body>
+</html>
