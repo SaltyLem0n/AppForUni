@@ -1,28 +1,80 @@
 ﻿@model List<(string PrizeName, string PrizeAmount)>
 @{
-    ViewData["Title"] = "เลือกรางวัล";
+    ViewData["Title"] = "Select Prize";
 }
 
-<h2>เลือกรางวัล</h2>
-<p>เลือก 1 ปุ่มเพื่อไปหน้า “ประกาศรางวัล”</p>
+<!-- Link the external CSS -->
+<link rel="stylesheet" href="~/css/Select.css" />
 
-<div style="display:grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap:12px; max-width:700px;">
-    @foreach (var p in Model)
-    {
-        <a asp-action="Announce"
-           asp-route-prizeName="@p.PrizeName"
-           asp-route-prizeAmount="@p.PrizeAmount"
-           style="text-decoration:none;">
-            <button type="button" style="width:100%; padding:14px; font-size:16px;">
-                @p.PrizeName<br />
-                <span style="font-size:13px; color:#333;">@p.PrizeAmount</span>
-            </button>
-        </a>
-    }
+<!-- Background Layers (Blobs & Grid) -->
+<div class="page-background-wrapper">
+    <div class="radial-grid"></div>
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
 </div>
 
-<hr />
-<div style="display:flex; gap:10px;">
-    <a asp-controller="Employees" asp-action="Index"><button type="button">กลับหน้า Import</button></a>
-    <a asp-action="Search"><button type="button">ค้นหาผู้ได้รับรางวัล</button></a>
+<div class="prize-container">
+
+    <!-- Header Section -->
+    <div class="prize-header">
+        <!-- System Badge -->
+        @* <div class="badge-system">
+            ✨ Lucky Draw System
+        </div> *@
+
+        <h2>เลือกรางวัล</h2>
+        <p>เลือกหมวดหมู่รางวัลด้านล่างเพื่อไปยังหน้าจอ "ประกาศผล"</p>
+
+        <!-- Navigation Buttons -->
+        @* <div class="nav-actions">
+            <!-- Secondary / Outline Button -->
+            <a asp-controller="Employees" asp-action="Index" class="btn-nav btn-nav-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+                Back to Import
+            </a>
+
+            <!-- Primary / Solid Button -->
+            <a asp-action="Search" class="btn-nav btn-nav-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                Search Winners
+            </a>
+        </div> *@
+    </div>
+
+    <!-- Grid Section -->
+    <div class="prize-grid">
+        @foreach (var p in Model)
+        {
+            <a asp-action="Announce"
+               asp-route-prizeName="@p.PrizeName"
+               asp-route-prizeAmount="@p.PrizeAmount"
+               class="prize-card">
+
+                <!-- Icon: Trophy -->
+                <div class="icon-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                    </svg>
+                </div>
+
+                <!-- Text Content -->
+                <span class="card-title">@p.PrizeName</span>
+
+                <span class="card-amount">
+                    <!-- Icon: Tag/Count -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>
+                    @p.PrizeAmount Available
+                </span>
+            </a>
+        }
+    </div>
+
 </div>

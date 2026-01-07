@@ -5,52 +5,92 @@
     var prizeAmount = (string)(ViewBag.PrizeAmount ?? "");
 }
 
-<h2>ประกาศรางวัล</h2>
+<!-- Link External CSS -->
+<link rel="stylesheet" href="~/css/announce.css" />
 
-<div style="border:1px solid #ddd; padding:12px; margin-bottom:12px;">
-    <div style="font-size:24px; font-weight:700;">@prizeName</div>
-    <div style="font-size:18px;">@prizeAmount</div>
+<!-- Background Layers -->
+<div class="page-background-wrapper">
+    <div class="radial-grid"></div>
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
 </div>
 
-@if (ViewBag.Error != null)
-{
-    <div style="padding:10px; border:1px solid #f5c2c7; background:#f8d7da; margin-bottom:10px;">
-        <b>ERROR:</b> @ViewBag.Error
+<div class="announce-container">
+    <div class="announce-card">
+
+        <h2 class="page-title">ประกาศรางวัล</h2>
+
+        <!-- Prize Info Section -->
+        <div class="prize-info-box">
+            <div class="prize-name">@prizeName</div>
+            <div class="prize-amount">@prizeAmount</div>
+        </div>
+
+        <!-- Alert Messages -->
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert-custom alert-error">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+                <span><b>ERROR:</b> @ViewBag.Error</span>
+            </div>
+        }
+        @if (ViewBag.Success != null)
+        {
+            <div class="alert-custom alert-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                <span><b>SUCCESS:</b> @ViewBag.Success</span>
+            </div>
+        }
+
+        <!-- Scan Form -->
+        <form asp-action="Announce" method="post" class="form-section">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="prizeName" value="@prizeName" />
+            <input type="hidden" name="prizeAmount" value="@prizeAmount" />
+
+            <label class="input-label">สแกนบาร์โค้ด (EmployeeID)</label>
+            <input id="scanBox" type="text" name="scannedCode"
+                   class="scan-input"
+                   placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
+
+            <button type="submit" class="btn-submit">
+                บันทึกผลรางวัล
+            </button>
+        </form>
+
+        <!-- Result Card (If Employee Found) -->
+        @if (Model != null)
+        {
+            <div class="winner-card">
+                <div class="winner-header">ข้อมูลพนักงาน</div>
+
+                <div class="winner-detail">
+                    <span class="detail-label">EmployeeID</span>
+                    <span class="detail-value">@Model.EmployeeID</span>
+                </div>
+                <div class="winner-detail">
+                    <span class="detail-label">Name</span>
+                    <span class="detail-value">@Model.EmployeeName</span>
+                </div>
+                <div class="winner-detail">
+                    <span class="detail-label">Department</span>
+                    <span class="detail-value">@Model.Department</span>
+                </div>
+            </div>
+        }
+
+        <!-- Navigation Footer -->
+        <div class="nav-footer">
+            <a asp-action="Select" class="btn-nav-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+                กลับหน้าเลือกรางวัล
+            </a>
+            <a asp-action="Search" class="btn-nav-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                ค้นหาผู้ได้รับรางวัล
+            </a>
+        </div>
     </div>
-}
-@if (ViewBag.Success != null)
-{
-    <div style="padding:10px; border:1px solid #badbcc; background:#d1e7dd; margin-bottom:10px;">
-        <b>SUCCESS:</b> @ViewBag.Success
-    </div>
-}
-
-<form asp-action="Announce" method="post" style="margin-bottom:14px;">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="prizeName" value="@prizeName" />
-    <input type="hidden" name="prizeAmount" value="@prizeAmount" />
-
-    <label style="font-weight:700;">สแกนบาร์โค้ด (EmployeeID)</label><br />
-    <input id="scanBox" type="text" name="scannedCode"
-           style="width:360px; padding:10px; font-size:18px;"
-           placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
-    <button type="submit" style="padding:10px 14px; font-size:16px;">บันทึกผลรางวัล</button>
-</form>
-
-@if (Model != null)
-{
-    <div style="border:1px solid #ddd; padding:12px;">
-        <h3>ข้อมูลพนักงาน</h3>
-        <p><b>EmployeeID:</b> @Model.EmployeeID</p>
-        <p><b>EmployeeName:</b> @Model.EmployeeName</p>
-        <p><b>Department:</b> @Model.Department</p>
-    </div>
-}
-
-<hr />
-<div style="display:flex; gap:10px;">
-    <a asp-action="Select"><button type="button">กลับหน้าเลือกรางวัล</button></a>
-    <a asp-action="Search"><button type="button">ค้นหาผู้ได้รับรางวัล</button></a>
 </div>
 
 <script>
