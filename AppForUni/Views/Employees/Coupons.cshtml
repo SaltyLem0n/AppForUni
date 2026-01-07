@@ -1,42 +1,77 @@
 ﻿@model List<YourApp.ViewModels.EmployeeCouponVM>
 @{
-    ViewData["Title"] = "Raffle Coupons"; Layout = null;
+    ViewData["Title"] = "Raffle Coupons";
+    Layout = null;
+    int counter = 1; // Start running number
 }
 
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <title>Print Coupons - RSU360</title>
     <link rel="stylesheet" href="~/css/coupons.css" />
 </head>
 <body>
     <div class="toolbar">
-        <button onclick="window.history.back()">Back</button>
-        <button onclick="window.print()">Print / Save as PDF</button>
+        <button class="btn-back" onclick="window.history.back()">Back</button>
+        <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
     </div>
 
     @{
         int perPage = 10;
     }
+
     @for (int i = 0; i < Model.Count; i += perPage)
     {
         <div class="sheet">
             @foreach (var item in Model.Skip(i).Take(perPage))
             {
                 <div class="coupon">
-                    <div class="c-header">@item.Department</div>
-                   
-                    
-                    
-                    
-                    <div class="c-empname">
-                        <span class="token">ID</span><span>@item.EmployeeID</span>
-                        <span style="margin-left:10mm;" class="token">Name</span><span>@item.EmployeeName</span>
+                    <!-- Header: Logo, Brand, and Running Number -->
+                    <div class="c-header">
+                        <div class="c-brand">
+                            <!-- Logo Image -->
+                            <img src="~/images/logo.png" class="c-logo" alt="Logo" onerror="this.style.display='none'" />
+                            <span>คูปองจับรางวัล</span>
+                        </div>
+                        <span class="c-number">NO. @counter</span>
                     </div>
-                    <img class="c-barcode" src="@item.BarcodeDataUri" />
+
+                    <!-- Body: Info and Barcode -->
+                    <div class="c-body">
+                        <div class="c-info">
+                            <div class="c-dept">@item.Department</div>
+
+                            <div class="c-label">Employee ID</div>
+                            <div class="c-value">@item.EmployeeID</div>
+
+                            <div class="c-label">Name</div>
+                            <div class="c-value">@item.EmployeeName</div>
+                        </div>
+                        <div class="c-code-area">
+                            <!-- Barcode -->
+                            <img class="c-barcode-img" src="@item.BarcodeDataUri" />
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="c-footer">
+                        New Year Celebration 2026 <br>
+                        พัฒนาโดย สาขาเทคโนโลยีสารสนเทศ และการสื่อสาร (หลักสูตรนานาชาติ)
+                    </div>
                 </div>
+
+                // Increment running number
+                counter++;
             }
         </div>
-        <div style="page-break-after: always;"></div>
+
+        // Page break logic handled by CSS, but extra div ensures clear separation if needed
+        if (i + perPage < Model.Count)
+        {
+            <div style="page-break-after: always;"></div>
+        }
     }
 </body>
 </html>

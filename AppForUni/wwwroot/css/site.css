@@ -1,22 +1,125 @@
+/* --- 1. THEME VARIABLES --- */
+:root {
+    /* Primary Deep Blue */
+    --theme-blue: #004aad;
+    /* Vibrant Pink Accent */
+    --theme-pink: #e91e63;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--theme-blue);
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f8f9fa; /* Light gray background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- NAVBAR STYLES --- */
+.navbar {
+    background-color: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.navbar-brand {
+    color: var(--theme-blue) !important;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .navbar-brand img {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
+    }
+
+.nav-link {
+    color: #555 !important;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+}
+
+    .nav-link:hover {
+        color: var(--theme-pink) !important;
+    }
+
+    .nav-link.active {
+        color: var(--theme-blue) !important;
+        font-weight: bold;
+    }
+
+/* --- FOOTER STYLES --- */
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px;
+    background-color: var(--theme-blue); /* Solid Blue Background */
+    color: white; /* White Text */
+}
+
+    .footer a {
+        color: #ffd1dc;
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+/* --- BUTTON STYLES --- */
+.btn-primary {
+    background-color: var(--theme-blue);
+    border-color: var(--theme-blue);
+}
+
+    .btn-primary:hover {
+        background-color: #003380;
+        border-color: #003380;
+    }
+
+/* Pink Button Custom Class */
+.btn-pink {
+    background-color: var(--theme-pink);
+    border-color: var(--theme-pink);
+    color: white;
+    transition: all 0.2s;
+}
+
+    .btn-pink:hover {
+        background-color: #c2185b;
+        border-color: #c2185b;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+/* --- CARD STYLES --- */
+.card-custom {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border-radius: 12px;
+    background: white;
+    overflow: hidden;
 }

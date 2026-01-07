@@ -1,85 +1,229 @@
-﻿@page {
+﻿/* --- THEME VARIABLES FOR PRINT --- */
+:root {
+    --theme-blue: #004aad;
+    --theme-pink: #e91e63;
+}
+
+@page {
     size: A4;
     margin: 8mm;
 }
 
 body {
-    font-family: Tahoma, Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #111;
+    background-color: #555; /* Dark bg for screen view */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
 }
 
+/* --- TOOLBAR --- */
 .toolbar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
     display: flex;
     gap: 10px;
-    align-items: center;
-    margin-bottom: 8mm;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
+    .toolbar button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+.btn-back {
+    background-color: #eee;
+    color: #333;
+}
+
+.btn-print {
+    background-color: var(--theme-blue);
+    color: white;
+}
+
+/* --- SHEET --- */
 .sheet {
+    background: white;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 0; /* Handled by wrapper or internal margins logic if needed, but flex gap handles spacing better */
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    margin-bottom: 20px;
     display: flex;
     flex-wrap: wrap;
-    gap: 0;
+    align-content: flex-start;
 }
-/* 2 columns × 5 rows = 10 tickets/page */
+
+/* --- COUPON --- */
 .coupon {
-    position: relative;
-    width: 99mm;
-    height: 56mm;
-    border: 1px solid #333;
+    width: 99mm; /* Approx half A4 width taking margins into account */
+    height: 56mm; /* Approx 1/5th A4 height */
     box-sizing: border-box;
-    padding: 4mm 4mm;
+    /* Use outline for borders to avoid messing up box-sizing calculations */
+    border: 1px dashed #ccc;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    /* Inner visual border */
+    outline: 1px solid #eee;
+    /* Margin to handle spacing on sheet */
+    margin: 3mm;
 }
-/* Header matches image */
+
+/* Header Strip - White Background */
 .c-header {
+    background-color: white;
+    color: var(--theme-blue);
+    padding: 4px 10px;
+    font-size: 14px;
     font-weight: 700;
-    font-size: 18pt;
-    line-height: 1.1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 36px;
+    border-bottom: 2px solid var(--theme-blue);
 }
 
-.c-f5 {
-    position: absolute;
-    top: 10mm;
-    right: 10mm;
-    font-size: 10pt;
-    font-weight: 400;
-}
-/* "Prize" text matches image size */
-.c-prize {
-    margin-top: 2mm;
-    font-weight: 700;
-    font-size: 22pt;
-}
-/* Data line (position matches image) */
-.c-div {
-    margin-top: 4mm;
-    font-size: 11pt;
+.c-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.c-empname {
-    margin-top: 2mm;
-    font-size: 11pt;
-}
-
-.token {
-    color: #222;
-    margin-right: 6mm;
-}
-/* Barcode at the bottom */
-.c-barcode {
-    position: absolute;
-    left: 8mm;
-    right: 8mm;
-    bottom: 6mm;
-    height: 12mm;
+.c-logo {
+    height: 24px;
     width: auto;
 }
-/* Print mode */
+
+.c-number {
+    color: var(--theme-pink);
+    padding: 2px 6px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 14px;
+    border: 1px solid var(--theme-pink);
+    border-radius: 4px;
+}
+
+/* Body */
+.c-body {
+    flex-grow: 1;
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: row;
+}
+
+.c-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.c-dept {
+    color: var(--theme-blue);
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 2px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.c-label {
+    font-size: 9px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.c-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+/* Barcode Area */
+.c-code-area {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-left: 8px;
+}
+
+.c-barcode-img {
+    width: 100%;
+    height: auto;
+    max-height: 55px;
+}
+
+/* Footer */
+.c-footer {
+    background-color: var(--theme-blue);
+    color: white;
+    text-align: center;
+    font-size: 9px;
+    padding: 3px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* --- PRINT MODE --- */
 @media print {
+    body {
+        background: none;
+        padding: 0;
+        margin: 0;
+    }
+
     .toolbar {
         display: none;
     }
 
+    .sheet {
+        width: 100%;
+        height: 100%;
+        box-shadow: none;
+        margin: 0;
+        /* Reset margins for print */
+        padding: 0;
+    }
+
     .coupon {
+        border: 1px solid #ddd; /* Real border for print */
+        outline: none;
+        margin: 0; /* Remove margin, use padding of sheet if needed or let flex handle it */
+        /* Slight adjustment to ensure 10 fit */
+        width: 98mm;
+        height: 56mm;
         page-break-inside: avoid;
+    }
+
+    /* Force background colors */
+    .c-header, .c-footer, .c-number {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
