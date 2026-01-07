@@ -57,7 +57,7 @@ body {
     background: white;
     width: 210mm;
     min-height: 297mm;
-    padding: 0; /* Handled by wrapper or internal margins logic if needed, but flex gap handles spacing better */
+    padding: 0;
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
     margin-bottom: 20px;
     display: flex;
@@ -70,16 +70,13 @@ body {
     width: 99mm; /* Approx half A4 width taking margins into account */
     height: 56mm; /* Approx 1/5th A4 height */
     box-sizing: border-box;
-    /* Use outline for borders to avoid messing up box-sizing calculations */
     border: 1px dashed #ccc;
     position: relative;
     overflow: hidden;
     background: #fff;
     display: flex;
     flex-direction: column;
-    /* Inner visual border */
     outline: 1px solid #eee;
-    /* Margin to handle spacing on sheet */
     margin: 3mm;
 }
 
@@ -123,28 +120,32 @@ body {
 .c-body {
     flex-grow: 1;
     padding: 6px 12px;
-    display: flex;
-    flex-direction: row;
+    display: block; /* Changed from flex to block to allow layering */
+    position: relative;
 }
 
+/* Info Area (Text) - Blue Zone */
 .c-info {
-    flex: 1;
-    min-width: 0;
+    width: 100%; /* Full Width */
+    position: relative;
+    z-index: 20; /* Higher z-index to sit ON TOP of barcode */
+    /* Add a slight background or shadow if you want text to pop over barcode, 
+       but typically for print we just let it overlap cleanly. */
 }
 
+/* Department Name */
 .c-dept {
     color: var(--theme-blue);
-    font-weight: 700;
-    font-size: 15px;
+    font-weight: 500;
+    font-size: 10px;
     text-transform: uppercase;
     margin-bottom: 4px;
     border-bottom: 1px solid #eee;
     padding-bottom: 2px;
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+    display: block;
+    white-space: normal; /* Wraps text */
+    overflow: visible;
+    line-height: 1.2;
 }
 
 .c-label {
@@ -156,26 +157,39 @@ body {
 }
 
 .c-value {
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 500;
     color: #333;
     margin-bottom: 2px;
 }
 
-/* Barcode Area */
+/* Barcode Area - Red Zone */
 .c-code-area {
-    width: 150px;
+    /* Significantly Bigger */
+    width: 270px; /* Wider area */
+    max-width: 80%; /* Don't exceed container */
+    /* Positioned Bottom Right */
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    /* Lower z-index so text prints over it */
+    z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    justify-content: center;
-    margin-left: 8px;
+    justify-content: flex-end;
+    opacity: 1; /* Keep opaque for scanning reliability */
+    padding: 0;
+    margin: 0;
 }
 
 .c-barcode-img {
     width: 100%;
     height: auto;
-    max-height: 55px;
+    /* Allow it to be tall */
+    max-height: 45mm;
+    margin-bottom: 1px
+    
 }
 
 /* Footer */
@@ -188,6 +202,8 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
+    position: relative;
+    z-index: 30; /* Footer stays on top */
 }
 
 /* --- PRINT MODE --- */
@@ -207,21 +223,26 @@ body {
         height: 100%;
         box-shadow: none;
         margin: 0;
-        /* Reset margins for print */
         padding: 0;
+        /* Ensure Flexbox is used for side-by-side layout */
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
     }
 
     .coupon {
-        border: 1px solid #ddd; /* Real border for print */
+        border: 1px solid #ddd;
         outline: none;
-        margin: 0; /* Remove margin, use padding of sheet if needed or let flex handle it */
-        /* Slight adjustment to ensure 10 fit */
+        /* Margin 3px as requested */
+        margin: 1px;
+        /* Adjust width to fit 2 per row with margins */
+        /* A4 width ~210mm. 2 items + margins need to fit. */
+        /* 98mm + 6mm(margins) = 104mm. 104 * 2 = 208mm. Fits nicely. */
         width: 98mm;
         height: 56mm;
         page-break-inside: avoid;
     }
 
-    /* Force background colors */
     .c-header, .c-footer, .c-number {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
