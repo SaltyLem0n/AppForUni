@@ -171,7 +171,7 @@ body {
     /* Positioned Bottom Right */
     position: absolute;
     right: 0px;
-    bottom: 0px;
+    bottom: 25px;
     /* Lower z-index so text prints over it */
     z-index: 10;
     display: flex;
