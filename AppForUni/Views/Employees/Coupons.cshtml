@@ -1,21 +1,23 @@
 ﻿@model List<YourApp.ViewModels.EmployeeCouponVM>
 @{
-    ViewData["Title"] = "Raffle Coupons";
+    ViewData["Title"] = "คูปองจับรางวัล";
     Layout = null;
     int counter = 1; // Start running number
 }
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
-    <title>Print Coupons - RSU360</title>
+    <title>พิมพ์คูปอง - RSU360</title>
     <link rel="stylesheet" href="~/css/coupons.css" />
 </head>
+
 <body>
     <div class="toolbar">
-        <button class="btn-back" onclick="window.history.back()">Back</button>
-        <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+        <button class="btn-back" onclick="window.history.back()">ย้อนกลับ</button>
+        <button class="btn-print" onclick="window.print()">พิมพ์ / บันทึกเป็น PDF</button>
     </div>
 
     @{
@@ -43,10 +45,10 @@
                         <div class="c-info">
                             <div class="c-dept">@item.Department</div>
 
-                            <div class="c-label">Name</div>
+                            <div class="c-label">ชื่อ - นามสกุล</div>
                             <div class="c-value">@item.EmployeeName</div>
 
-                            <div class="c-label">Employee ID</div>
+                            <div class="c-label">รหัสพนักงาน</div>
                             <div class="c-value">@item.EmployeeID</div>
 
                         </div>
@@ -58,7 +60,7 @@
 
                     <!-- Footer -->
                     <div class="c-footer">
-                        New Year Celebration 2026 
+                        งานเลี้ยงสังสรรค์ปีใหม่ 2569
                     </div>
                 </div>
 
@@ -74,4 +76,5 @@
         }
     }
 </body>
+
 </html>

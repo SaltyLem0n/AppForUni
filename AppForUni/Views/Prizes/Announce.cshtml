@@ -23,12 +23,15 @@
         left: 0;
         width: 100%;
         height: 100%;
-        display: none; /* Hidden by default */
+        display: none;
+        /* Hidden by default */
         align-items: center;
         justify-content: center;
         padding: 20px;
-        z-index: 9999; /* Ensure it's on top */
-        background: rgba(0,0,0,0.5); /* Dimmed background */
+        z-index: 9999;
+        /* Ensure it's on top */
+        background: rgba(0, 0, 0, 0.5);
+        /* Dimmed background */
         backdrop-filter: blur(5px);
         animation: fadeIn 0.4s ease-out;
     }
@@ -105,10 +108,10 @@
         letter-spacing: 1px;
     }
 
-        .btn-claim:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
+    .btn-claim:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
 
     /* --- No Win / Error Styles --- */
     .popup-container.nowin-theme {
@@ -171,10 +174,10 @@
         letter-spacing: 0.5px;
     }
 
-        .btn-try-again:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
+    .btn-try-again:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
 
     /* Animations */
     @@keyframes fadeIn {
@@ -200,7 +203,9 @@
     }
 
     @@keyframes bounce {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0);
         }
 
@@ -210,7 +215,9 @@
     }
 
     @@keyframes gentleFloat {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0) rotate(-3deg);
         }
 
@@ -239,7 +246,9 @@
     }
 
     @@keyframes sparkle {
-        0%, 100% {
+
+        0%,
+        100% {
             opacity: 0;
             transform: scale(0);
         }
@@ -299,18 +308,27 @@
             <input type="hidden" name="prizeAmount" value="@prizeAmount" />
 
             <label class="input-label">สแกนบาร์โค้ด (EmployeeID)</label>
-            <input id="scanBox" type="text" name="scannedCode" class="scan-input" placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
+            <input id="scanBox" type="text" name="scannedCode" class="scan-input"
+                placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
 
             <button type="submit" class="btn-submit">บันทึกผลรางวัล</button>
         </form>
 
         <div class="nav-footer">
             <a asp-action="Select" class="btn-nav-outline">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5" />
+                    <path d="M12 19l-7-7 7-7" />
+                </svg>
                 กลับหน้าเลือกรางวัล
             </a>
             <a asp-action="Search" class="btn-nav-outline">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
                 ค้นหาผู้ได้รับรางวัล
             </a>
         </div>
@@ -320,11 +338,11 @@
 <div id="winnerPopup" class="popup-overlay" style="@(showSuccess ? "display:flex;" : "display:none;")">
     <div class="popup-container winner-theme" id="winnerContainer">
         <div class="trophy-icon">🏆</div>
-        <h1 class="winner-title">Congratulations!</h1>
+        <h1 class="winner-title">ขอแสดงความยินดี!</h1>
         <h2 class="winner-name">@Model?.EmployeeName</h2>
 
         <div class="prize-box">
-            <div class="prize-label">You Won</div>
+            <div class="prize-label">คุณได้รับรางวัล</div>
             <div class="prize-name">@prizeName</div>
             <div style="font-size:0.9rem; margin-top:5px;">@prizeAmount</div>
         </div>
@@ -333,7 +351,7 @@
             @successMsg
         </p>
 
-        <button class="btn-claim" onclick="closePopup('winnerPopup')">Continue</button>
+        <button class="btn-claim" onclick="closePopup('winnerPopup')">ดำเนินการต่อ</button>
     </div>
 </div>
 
@@ -342,21 +360,21 @@
         <div class="icon-container" style="margin-bottom:28px;">
             <div class="emoji-icon">😢</div>
         </div>
-        <h1 class="main-title">Not This Time</h1>
-        <p class="encouragement">Oops!</p>
+        <h1 class="main-title">เสียใจด้วยครับ</h1>
+        <p class="encouragement">ขออภัย</p>
         <div class="message-box">
             <p class="message-text">@errorMsg</p>
         </div>
-        <button class="btn-try-again" onclick="closePopup('errorPopup')">Try Again</button>
+        <button class="btn-try-again" onclick="closePopup('errorPopup')">ลองใหม่อีกครั้ง</button>
     </div>
 </div>
 
 <script>
     // Handle Enter key for form
     document.getElementById('scanBox').addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-         // Form submits naturally
-      }
+        if (e.key === 'Enter') {
+            // Form submits naturally
+        }
     });
 
     // Close Popup Function
@@ -416,7 +434,7 @@
     function createSparkles() {
         const container = document.getElementById('winnerContainer');
         const sparkleColors = ['#fbbf24', '#ffffff', '#fef3c7'];
-        if(!container) return;
+        if (!container) return;
         for (let i = 0; i < 12; i++) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';

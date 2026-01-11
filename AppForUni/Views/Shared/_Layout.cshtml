@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AppForUni.styles.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <!-- Navbar: Clean white background defined in site.css -->
@@ -18,21 +20,22 @@
                     <img src="~/images/logo.png" onerror="this.style.display='none'" alt="Logo" />
                     RSU360 DataCentric
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <!-- Navigation Links -->
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">Select</a> 
+                            <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">เลือกรางวัล</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Search">Search</a>
+                            <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Search">ค้นหารายชื่อ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Employees" asp-action="Index">Employees</a>
+                            <a class="nav-link" asp-area="" asp-controller="Employees"
+                                asp-action="Index">รายชื่อพนักงาน</a>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +51,7 @@
     <!-- Footer: Blue background with white text -->
     <footer class="footer border-top">
         <div class="container text-center">
-            Developed By <strong>Information and Communication Technology (International Program)</strong>
+            พัฒนาโดย <strong>Information and Communication Technology (International Program)</strong>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -56,4 +59,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

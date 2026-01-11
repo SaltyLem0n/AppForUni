@@ -1,12 +1,12 @@
 ﻿@model List<YourApp.Models.Employee>
 
 @{
-    ViewData["Title"] = "Employees";
+    ViewData["Title"] = "รายชื่อพนักงาน";
 }
 
 <!-- Page Header & Action Buttons -->
 <div class="d-flex justify-content-between align-items-center mb-4 mt-4">
-    <h1 class="mb-0" style="color: var(--theme-blue); font-weight: 700;">Employee Management</h1>
+    <h1 class="mb-0" style="color: var(--theme-blue); font-weight: 700;">จัดการข้อมูลพนักงาน</h1>
 
     <!-- "Generate Coupons" Button - Styled with Theme Pink -->
     <a asp-action="Coupons" class="btn btn-pink btn-lg shadow-sm">
@@ -16,7 +16,7 @@
             <path d="M6 10v6H0v-6h6Zm-5 1v4h4v-4H1Zm11-9h2v2h-2V2Z" />
             <path d="M10 0v6h6V0h-6Zm5 1v4h-4V1h4ZM8 1V0h1v2H8v2H7V1h1Zm0 5V4h1v2H8ZM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8H6Zm0 0v1H2V8H1v1H0V7h3v1h3Zm10 1h-1V7h1v2Zm-1 0h-1v2h2v-1h-1V9Zm-4 0h2v1h-1v1h-1V9Zm2 3v-1h-1v1h-1v1H9v1h3v-2h1Zm0 0h3v1h-3v-1Z" />
         </svg>
-        Generate Coupons
+        สร้างคูปอง
     </a>
 </div>
 
@@ -32,18 +32,18 @@
 <!-- Import Section Card -->
 <div class="card card-custom mb-5">
     <div class="card-body p-4">
-        <h5 class="card-title text-muted mb-3">Import Data</h5>
+        <h5 class="card-title text-muted mb-3">นำเข้าข้อมูล</h5>
         <form asp-action="ImportExcel" method="post" enctype="multipart/form-data" class="row g-3 align-items-center">
             <div class="col-auto">
                 <input type="file" class="form-control" name="excelFile" accept=".xlsx" required />
             </div>
             <div class="col-auto">
                 <button type="submit" class="btn btn-primary">
-                    Upload Excel
+                    อัปโหลดไฟล์ Excel
                 </button>
             </div>
             <div class="col-auto">
-                <span class="text-muted small">Supports .xlsx (Columns: ID, Name, Department)</span>
+                <span class="text-muted small">รองรับไฟล์ .xlsx (คอลัมน์: ID, Name, Department)</span>
             </div>
         </form>
     </div>
@@ -55,9 +55,9 @@
         <table class="table table-striped table-hover mb-0">
             <thead>
                 <tr style="background-color: var(--theme-blue);">
-                    <th scope="col" class="ps-4" style="color: white; border: none; padding: 1rem;">ID</th>
-                    <th scope="col" style="color: white; border: none; padding: 1rem;">Name</th>
-                    <th scope="col" style="color: white; border: none; padding: 1rem;">Department</th>
+                    <th scope="col" class="ps-4" style="color: white; border: none; padding: 1rem;">รหัสพนักงาน</th>
+                    <th scope="col" style="color: white; border: none; padding: 1rem;">ชื่อ - นามสกุล</th>
+                    <th scope="col" style="color: white; border: none; padding: 1rem;">แผนก/ฝ่าย</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,7 +76,7 @@
                 {
                     <tr>
                         <td colspan="3" class="text-center text-muted py-5">
-                            No employees found. Please upload an Excel file.
+                            ไม่พบข้อมูลพนักงาน กรุณาอัปโหลดไฟล์ Excel
                         </td>
                     </tr>
                 }

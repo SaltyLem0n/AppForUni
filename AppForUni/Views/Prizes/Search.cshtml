@@ -25,7 +25,7 @@
         justify-content: center;
         padding: 20px;
         z-index: 9999;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(5px);
         animation: fadeIn 0.4s ease-out;
     }
@@ -100,9 +100,9 @@
         text-transform: uppercase;
     }
 
-        .btn-claim:hover {
-            transform: translateY(-3px);
-        }
+    .btn-claim:hover {
+        transform: translateY(-3px);
+    }
 
     /* No Win Theme */
     .popup-container.nowin-theme {
@@ -163,9 +163,9 @@
         text-transform: uppercase;
     }
 
-        .btn-try-again:hover {
-            transform: translateY(-2px);
-        }
+    .btn-try-again:hover {
+        transform: translateY(-2px);
+    }
 
     /* Animations (Same as above) */
     @@keyframes fadeIn {
@@ -191,7 +191,9 @@
     }
 
     @@keyframes bounce {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0);
         }
 
@@ -201,7 +203,9 @@
     }
 
     @@keyframes gentleFloat {
-        0%, 100% {
+
+        0%,
+        100% {
             transform: translateY(0) rotate(-3deg);
         }
 
@@ -230,7 +234,9 @@
     }
 
     @@keyframes sparkle {
-        0%, 100% {
+
+        0%,
+        100% {
             opacity: 0;
             transform: scale(0);
         }
@@ -282,13 +288,19 @@
             @Html.AntiForgeryToken()
             <div class="input-group-custom">
                 <label class="input-label" for="empSearch">EmployeeID</label>
-                <input id="empSearch" type="text" name="employeeId" class="search-input" placeholder="กรอก/สแกน EmployeeID แล้วกด Enter" autofocus autocomplete="off" />
+                <input id="empSearch" type="text" name="employeeId" class="search-input"
+                    placeholder="กรอก/สแกน EmployeeID แล้วกด Enter" autofocus autocomplete="off" />
             </div>
             <button type="submit" class="btn-search-submit">ค้นหา</button>
         </form>
         <div class="divider"></div>
         <a asp-action="Select" class="btn-back-outline">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="margin-right:4px;">
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
             กลับหน้าเลือกรางวัล
         </a>
     </div>
@@ -301,11 +313,11 @@
         <h2 class="winner-name">ID: @employeeId</h2>
 
         <div class="prize-box">
-            <div class="prize-label">You Won</div>
+            <div class="prize-label">คุณได้รับรางวัล</div>
             <div class="prize-name-text">@popupMsg</div>
         </div>
 
-        <button class="btn-claim" onclick="closePopup('winnerPopup')">Close</button>
+        <button class="btn-claim" onclick="closePopup('winnerPopup')">ปิด</button>
     </div>
 </div>
 
@@ -328,18 +340,18 @@
         <p class="encouragement">
             @if (popupType == "error")
             {
-                <text>Error</text>
+                <text>เกิดข้อผิดพลาด</text>
             }
             else
             {
 
-                <text>Sorry!</text>
+                <text>ขออภัย</text>
             }
         </p>
         <div class="message-box">
             <p class="message-text">@popupMsg</p>
         </div>
-        <button class="btn-try-again" onclick="closePopup('errorPopup')">Close</button>
+        <button class="btn-try-again" onclick="closePopup('errorPopup')">ปิด</button>
     </div>
 </div>
 
@@ -397,7 +409,7 @@
     function createSparkles() {
         const container = document.getElementById('winnerContainer');
         const sparkleColors = ['#fbbf24', '#ffffff', '#fef3c7'];
-        if(!container) return;
+        if (!container) return;
         for (let i = 0; i < 12; i++) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
