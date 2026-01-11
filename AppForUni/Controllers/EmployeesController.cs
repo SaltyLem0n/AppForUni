@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
@@ -11,6 +12,7 @@ using ZXing.Common;
 
 namespace YourApp.Controllers
 {
+    [Authorize] // <--- This forces Login ONLY when accessing this controller
     public class EmployeesController : Controller
     {
         private readonly AppDbContext _db;

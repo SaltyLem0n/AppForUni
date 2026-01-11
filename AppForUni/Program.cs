@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies; // Make sure you have this
 using Microsoft.EntityFrameworkCore;
 using YourApp.Data;
 
@@ -5,6 +6,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// 1. ADD AUTHENTICATION SERVICES
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+    });
 
 // Connect to SQL Server
 builder.Services.AddDbContext<AppDbContext>(opt =>
@@ -23,10 +32,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
+app.UseRouting(); // <--- EXISTING CODE
 
+// 2. ADD THESE TWO LINES HERE (ORDER MATTERS!)
+app.UseAuthentication();
+app.UseAuthorization();
+
+// 3. YOUR ROUTE CONFIGURATION
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Employees}/{action=Index}/{id?}");
+    pattern: "{controller=Prizes}/{action=Select}/{id?}"); // Start page = Prizes/Select
 
 app.Run();
