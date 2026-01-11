@@ -107,10 +107,10 @@
 }
 
 .prize-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
+    display: flex;
     margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* 2. Prize Cards (Glassmorphism) */
