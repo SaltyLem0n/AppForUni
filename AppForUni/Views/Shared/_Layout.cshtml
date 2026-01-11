@@ -28,15 +28,16 @@
                     <ul class="navbar-nav flex-grow-1">
                         <!-- Navigation Links -->
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Employees"
+                               asp-action="Index">รายชื่อพนักงาน</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">เลือกรางวัล</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Search">ค้นหารายชื่อ</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Employees"
-                                asp-action="Index">รายชื่อพนักงาน</a>
-                        </li>
+               
                     </ul>
                 </div>
             </div>
@@ -51,7 +52,7 @@
     <!-- Footer: Blue background with white text -->
     <footer class="footer border-top">
         <div class="container text-center">
-            พัฒนาโดย <strong>Information and Communication Technology (International Program)</strong>
+            <strong>มหาวิทยาลัยรังสิต Rangsit University</strong>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
