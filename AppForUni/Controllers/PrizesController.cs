@@ -37,6 +37,7 @@ namespace YourApp.Controllers
             return View();
         }
 
+        //
         // 2) POST: รับค่าบาร์โค้ด(=EmployeeID) -> lookup employee -> บันทึกรางวัลใน Transaction เดียว
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -68,15 +69,31 @@ namespace YourApp.Controllers
 
             try
             {
-                // กันกรณีรางวัลนี้ถูกจับไปแล้ว
-                var prizeTaken = await _db.PrizeAwards.AnyAsync(x => x.PrizeName == prizeName);
-                if (prizeTaken)
+                // --- NEW LOGIC START: Check Limits ---
+
+                // Determine the limit based on the prize name
+                int limit = 1; // Default for 1st and 2nd prizes
+                if (prizeName == "รางวัลที่ 3")
                 {
-                    ViewBag.Error = $"รางวัลนี้ถูกบันทึกแล้ว: {prizeName}";
-                    return View(emp);
+                    limit = 10;
+                }
+                else if (prizeName == "รางวัลที่ 4")
+                {
+                    limit = 20;
                 }
 
-                // กันกรณีพนักงานคนนี้ได้รางวัลแล้ว
+                // Count how many times this prize has already been awarded
+                var currentCount = await _db.PrizeAwards.CountAsync(x => x.PrizeName == prizeName);
+
+                if (currentCount >= limit)
+                {
+                    ViewBag.Error = $"รางวัลนี้ครบจำนวนแล้ว ({limit} รางวัล): {prizeName}";
+                    return View(emp);
+                }
+                // --- NEW LOGIC END ---
+
+
+                // กันกรณีพนักงานคนนี้ได้รางวัลแล้ว (Existing logic)
                 var empAlreadyWon = await _db.PrizeAwards.AnyAsync(x => x.EmployeeID == emp.EmployeeID);
                 if (empAlreadyWon)
                 {
@@ -86,6 +103,7 @@ namespace YourApp.Controllers
                     ViewBag.Error = $"พนักงานนี้ได้รับรางวัลแล้ว: {old.PrizeName} ({old.PrizeAmount})";
                     return View(emp);
                 }
+
                 if (_db.PrizeAwards is null)
                 {
                     throw new InvalidOperationException("Database context is not initialized.");
@@ -102,7 +120,8 @@ namespace YourApp.Controllers
                 await _db.SaveChangesAsync();
                 await tx.CommitAsync();
 
-                ViewBag.Success = "บันทึกผลรางวัลเรียบร้อย";
+                // Optional: Show how many are left in the success message
+                ViewBag.Success = $"บันทึกผลรางวัลเรียบร้อย (มอบแล้ว {currentCount + 1}/{limit})";
                 return View(emp);
             }
             catch (Exception ex)
