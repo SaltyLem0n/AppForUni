@@ -57,6 +57,11 @@ namespace YourApp.Controllers
                 }
 
                 using var tx = await _db.Database.BeginTransactionAsync();
+
+                // Clear existing data before import (PrizeAwards first due to FK)
+                await _db.Database.ExecuteSqlRawAsync("DELETE FROM PrizeAwards");
+                await _db.Database.ExecuteSqlRawAsync("DELETE FROM Employees");
+
                 for (int r = 2; r <= lastRow; r++)
                 {
                     // Read columns 1, 2, 3 (ID, Name, Department)
