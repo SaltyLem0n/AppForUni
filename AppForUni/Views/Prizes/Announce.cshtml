@@ -3,12 +3,281 @@
     ViewData["Title"] = "ประกาศรางวัล";
     var prizeName = (string)(ViewBag.PrizeName ?? "");
     var prizeAmount = (string)(ViewBag.PrizeAmount ?? "");
+
+    // Determine state for JS
+    bool showSuccess = ViewBag.Success != null;
+    bool showError = ViewBag.Error != null;
+    string errorMsg = ViewBag.Error as string;
+    string successMsg = ViewBag.Success as string;
 }
 
-<!-- Link External CSS -->
 <link rel="stylesheet" href="~/css/announce.css" />
 
-<!-- Background Layers -->
+<style>
+    /* Shared Popup Styles */
+    @@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
+
+    .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none; /* Hidden by default */
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 9999; /* Ensure it's on top */
+        background: rgba(0,0,0,0.5); /* Dimmed background */
+        backdrop-filter: blur(5px);
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    /* --- Winner Styles --- */
+    .popup-container.winner-theme {
+        background: #ffffff;
+        font-family: 'Poppins', sans-serif;
+        color: #1e293b;
+        max-width: 500px;
+        border-radius: 24px;
+        padding: 48px 40px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s forwards;
+    }
+
+    .trophy-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+        animation: bounce 1s ease-in-out infinite;
+        display: inline-block;
+    }
+
+    .winner-title {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        line-height: 1.2;
+        color: #1e293b;
+    }
+
+    .winner-name {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #fbbf24;
+    }
+
+    .prize-box {
+        display: inline-block;
+        padding: 16px 32px;
+        border-radius: 16px;
+        margin: 24px 0;
+        background: rgba(251, 191, 36, 0.15);
+        border: 2px solid #fbbf24;
+    }
+
+    .prize-label {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        opacity: 0.9;
+    }
+
+    .prize-name {
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .btn-claim {
+        padding: 18px 48px;
+        border-radius: 50px;
+        font-size: 18px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        background: #10b981;
+        color: white;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+        .btn-claim:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+    /* --- No Win / Error Styles --- */
+    .popup-container.nowin-theme {
+        background: #ffffff;
+        font-family: 'Quicksand', sans-serif;
+        color: #0f172a;
+        max-width: 480px;
+        border-radius: 28px;
+        padding: 56px 44px;
+        text-align: center;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        animation: gentlePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
+    }
+
+    .emoji-icon {
+        font-size: 72px;
+        display: inline-block;
+        animation: gentleFloat 2.5s ease-in-out infinite;
+    }
+
+    .main-title {
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.2;
+    }
+
+    .encouragement {
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 28px;
+        color: #3b82f6;
+    }
+
+    .message-box {
+        padding: 24px;
+        border-radius: 18px;
+        margin: 28px 0;
+        background: rgba(59, 130, 246, 0.1);
+        border: 2px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .message-text {
+        font-size: 17px;
+        line-height: 1.7;
+        font-weight: 500;
+    }
+
+    .btn-try-again {
+        padding: 16px 42px;
+        border-radius: 50px;
+        font-size: 17px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        background: #6366f1;
+        color: white;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .btn-try-again:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    /* Animations */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes popIn {
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes gentlePopIn {
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @@keyframes gentleFloat {
+        0%, 100% {
+            transform: translateY(0) rotate(-3deg);
+        }
+
+        50% {
+            transform: translateY(-12px) rotate(3deg);
+        }
+    }
+
+    @@keyframes confettiFall {
+        to {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes moneyFall {
+        0% {
+            transform: translateY(-50px);
+            opacity: 0.9;
+        }
+
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    @@keyframes sparkle {
+        0%, 100% {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .confetti {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        pointer-events: none;
+        animation: confettiFall 3s ease-out forwards;
+        z-index: 10000;
+    }
+
+    .money {
+        position: fixed;
+        font-size: 32px;
+        pointer-events: none;
+        animation: moneyFall 4s ease-out forwards;
+        opacity: 0.9;
+        z-index: 10000;
+    }
+
+    .sparkle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        animation: sparkle 1.5s ease-in-out infinite;
+    }
+</style>
+
 <div class="page-background-wrapper">
     <div class="radial-grid"></div>
     <div class="mesh-blob blob-1"></div>
@@ -17,69 +286,24 @@
 
 <div class="announce-container">
     <div class="announce-card">
-
         <h2 class="page-title">ประกาศรางวัล</h2>
 
-        <!-- Prize Info Section -->
         <div class="prize-info-box">
             <div class="prize-name">@prizeName</div>
             <div class="prize-amount">@prizeAmount</div>
         </div>
 
-        <!-- Alert Messages -->
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert-custom alert-error">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
-                <span><b>ERROR:</b> @ViewBag.Error</span>
-            </div>
-        }
-        @if (ViewBag.Success != null)
-        {
-            <div class="alert-custom alert-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-                <span><b>SUCCESS:</b> @ViewBag.Success</span>
-            </div>
-        }
-
-        <!-- Scan Form -->
         <form asp-action="Announce" method="post" class="form-section">
             @Html.AntiForgeryToken()
             <input type="hidden" name="prizeName" value="@prizeName" />
             <input type="hidden" name="prizeAmount" value="@prizeAmount" />
 
             <label class="input-label">สแกนบาร์โค้ด (EmployeeID)</label>
-            <input id="scanBox" type="text" name="scannedCode"
-                   class="scan-input"
-                   placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
+            <input id="scanBox" type="text" name="scannedCode" class="scan-input" placeholder="สแกน/พิมพ์ EmployeeID แล้วกด Enter" autofocus />
 
-            <button type="submit" class="btn-submit">
-                บันทึกผลรางวัล
-            </button>
+            <button type="submit" class="btn-submit">บันทึกผลรางวัล</button>
         </form>
 
-        <!-- Result Card (If Employee Found) -->
-        @if (Model != null)
-        {
-            <div class="winner-card">
-                <div class="winner-header">ข้อมูลพนักงาน</div>
-
-                <div class="winner-detail">
-                    <span class="detail-label">EmployeeID</span>
-                    <span class="detail-value">@Model.EmployeeID</span>
-                </div>
-                <div class="winner-detail">
-                    <span class="detail-label">Name</span>
-                    <span class="detail-value">@Model.EmployeeName</span>
-                </div>
-                <div class="winner-detail">
-                    <span class="detail-label">Department</span>
-                    <span class="detail-value">@Model.Department</span>
-                </div>
-            </div>
-        }
-
-        <!-- Navigation Footer -->
         <div class="nav-footer">
             <a asp-action="Select" class="btn-nav-outline">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5" /><path d="M12 19l-7-7 7-7" /></svg>
@@ -93,11 +317,114 @@
     </div>
 </div>
 
+<div id="winnerPopup" class="popup-overlay" style="@(showSuccess ? "display:flex;" : "display:none;")">
+    <div class="popup-container winner-theme" id="winnerContainer">
+        <div class="trophy-icon">🏆</div>
+        <h1 class="winner-title">Congratulations!</h1>
+        <h2 class="winner-name">@Model?.EmployeeName</h2>
+
+        <div class="prize-box">
+            <div class="prize-label">You Won</div>
+            <div class="prize-name">@prizeName</div>
+            <div style="font-size:0.9rem; margin-top:5px;">@prizeAmount</div>
+        </div>
+
+        <p class="message" style="margin-bottom:20px; color:#64748b;">
+            @successMsg
+        </p>
+
+        <button class="btn-claim" onclick="closePopup('winnerPopup')">Continue</button>
+    </div>
+</div>
+
+<div id="errorPopup" class="popup-overlay" style="@(showError ? "display:flex;" : "display:none;")">
+    <div class="popup-container nowin-theme" id="errorContainer">
+        <div class="icon-container" style="margin-bottom:28px;">
+            <div class="emoji-icon">😢</div>
+        </div>
+        <h1 class="main-title">Not This Time</h1>
+        <p class="encouragement">Oops!</p>
+        <div class="message-box">
+            <p class="message-text">@errorMsg</p>
+        </div>
+        <button class="btn-try-again" onclick="closePopup('errorPopup')">Try Again</button>
+    </div>
+</div>
+
 <script>
-    // เครื่องสแกนส่วนใหญ่ส่ง Enter ท้ายสตริงอยู่แล้ว -> submit อัตโนมัติ
+    // Handle Enter key for form
     document.getElementById('scanBox').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') {
-        // ให้ form submit ตามปกติ
+         // Form submits naturally
       }
     });
+
+    // Close Popup Function
+    function closePopup(id) {
+        document.getElementById(id).style.display = 'none';
+        // Refocus on scan box
+        document.getElementById('scanBox').focus();
+    }
+
+    // --- Animation Logic (Triggered if popup is visible) ---
+    window.addEventListener('load', () => {
+        const isWinner = document.getElementById('winnerPopup').style.display === 'flex';
+        const isError = document.getElementById('errorPopup').style.display === 'flex';
+
+        if (isWinner) {
+            createConfetti();
+            createMoneyRain();
+            createSparkles();
+        }
+    });
+
+    // --- Animation Functions ---
+    function createConfetti() {
+        const colors = ['#fbbf24', '#10b981', '#6366f1', '#ec4899', '#f59e0b', '#8b5cf6'];
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3500);
+            }, i * 50);
+        }
+    }
+
+    function createMoneyRain() {
+        const moneyEmojis = ['💵', '💰', '💸', '💴', '💶', '💷'];
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const money = document.createElement('div');
+                money.className = 'money';
+                money.textContent = moneyEmojis[Math.floor(Math.random() * moneyEmojis.length)];
+                money.style.left = Math.random() * 100 + '%';
+                money.style.top = '-50px';
+                money.style.animationDelay = Math.random() * 0.8 + 's';
+                money.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                document.body.appendChild(money);
+                setTimeout(() => money.remove(), 5000);
+            }, i * 100);
+        }
+    }
+
+    function createSparkles() {
+        const container = document.getElementById('winnerContainer');
+        const sparkleColors = ['#fbbf24', '#ffffff', '#fef3c7'];
+        if(!container) return;
+        for (let i = 0; i < 12; i++) {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.background = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 1.5 + 's';
+            container.appendChild(sparkle);
+        }
+    }
 </script>
