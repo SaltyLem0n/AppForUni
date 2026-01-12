@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using YourApp.Data;
+using YourApp.Utilities;
 
 namespace YourApp.Controllers
 {
@@ -29,7 +30,7 @@ namespace YourApp.Controllers
         {
             var adminSetting = await _db.AdminSettings.FirstOrDefaultAsync();
 
-            if (adminSetting != null && password == adminSetting.AdminPassword)
+            if (adminSetting != null && PasswordHelper.ComputeHash(password) == adminSetting.AdminPassword)
             {
                 var claims = new List<Claim>
                 {
@@ -58,6 +59,35 @@ namespace YourApp.Controllers
             ViewBag.Error = "Incorrect Passcode";
             ViewData["ReturnUrl"] = returnUrl; // Keep the return URL even if they fail
             return View();
+        }
+
+        // --- NEW: One-time Seed or Manual Fix ---
+        // Usage: /Account/SeedAdmin?password=Secret1234
+        [HttpGet]
+        public async Task<IActionResult> SeedAdmin(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password)) return Content("Pass password query param");
+
+            var existing = await _db.AdminSettings.FirstOrDefaultAsync();
+            if (existing == null)
+            {
+                // Create new
+                _db.AdminSettings.Add(new Models.AdminSetting
+                {
+                    AdminPassword = YourApp.Utilities.PasswordHelper.ComputeHash(password)
+                });
+                await _db.SaveChangesAsync();
+                return Content($"Created new admin password hash. You can now login with '{password}'.");
+            }
+            else
+            {
+                // Optional: Allow overwrite if you really want to reset it easily during dev
+                // existing.AdminPassword = YourApp.Utilities.PasswordHelper.ComputeHash(password);
+                // await _db.SaveChangesAsync();
+                // return Content($"Updated admin password hash. You can now login with '{password}'.");
+
+                return Content("Admin password already Set. Use UpdatePassword if you are logged in, or direct SQL if locked out.");
+            }
         }
 
         public async Task<IActionResult> Logout()
