@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    bool isExpired = false;
+    if (DateTime.TryParse(Configuration["EventSettings:EventEndDate"], out var endDate))
+    {
+        isExpired = DateTime.Now > endDate;
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -27,13 +36,18 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <!-- Navigation Links -->
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Employees"
-                               asp-action="Index">รายชื่อพนักงาน</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">เลือกรางวัล</a>
-                        </li>
+                        
+                        @if (!isExpired)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Employees"
+                                   asp-action="Index">รายชื่อพนักงาน</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">เลือกรางวัล</a>
+                            </li>
+                        }
+
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Search">ค้นหารายชื่อ</a>
                         </li>

@@ -16,12 +16,31 @@ namespace YourApp.Controllers
     public class EmployeesController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly IConfiguration _config;
 
-        public EmployeesController(AppDbContext db) => _db = db;
+        public EmployeesController(AppDbContext db, IConfiguration config)
+        {
+            _db = db;
+            _config = config;
+        }
+
+        // Helper to check if event is expired
+        private bool IsEventExpired()
+        {
+            var endDateStr = _config["EventSettings:EventEndDate"];
+            if (DateTime.TryParse(endDateStr, out var endDate))
+            {
+                return DateTime.Now > endDate;
+            }
+            return false;
+        }
 
         // Page 1: Display list + Upload form
         public async Task<IActionResult> Index()
         {
+            // If expired, redirect to Prize Search
+            if (IsEventExpired()) return RedirectToAction("Search", "Prizes");
+
             var employees = await _db.Employees
                 .AsNoTracking()
                 .OrderBy(x => x.EmployeeID)
@@ -34,6 +53,8 @@ namespace YourApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportExcel(IFormFile excelFile)
         {
+            if (IsEventExpired()) return RedirectToAction("Search", "Prizes");
+
             if (excelFile == null || excelFile.Length == 0)
             {
                 TempData["Msg"] = "Please select an Excel file (.xlsx)";

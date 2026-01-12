@@ -8,11 +8,30 @@ namespace YourApp.Controllers
     public class PrizesController : Controller
     {
         private readonly AppDbContext _db;
-        public PrizesController(AppDbContext db) => _db = db;
+        private readonly IConfiguration _config;
+
+        public PrizesController(AppDbContext db, IConfiguration config)
+        {
+            _db = db;
+            _config = config;
+        }
+
+        // Helper to check if event is expired
+        private bool IsEventExpired()
+        {
+            var endDateStr = _config["EventSettings:EventEndDate"];
+            if (DateTime.TryParse(endDateStr, out var endDate))
+            {
+                return DateTime.Now > endDate;
+            }
+            return false;
+        }
 
         // 1) Select Prize Page
         public IActionResult Select()
         {
+            if (IsEventExpired()) return RedirectToAction(nameof(Search));
+
             var prizes = new List<(string PrizeName, string PrizeAmount)>
             {
                 ("รางวัลที่ 1",  "เงินรางวัล 10,000 บาท"),
@@ -49,6 +68,8 @@ namespace YourApp.Controllers
         [HttpGet]
         public async Task<IActionResult> Announce(string prizeName, string prizeAmount)
         {
+            if (IsEventExpired()) return RedirectToAction(nameof(Search));
+
             if (string.IsNullOrWhiteSpace(prizeName) || string.IsNullOrWhiteSpace(prizeAmount))
                 return RedirectToAction(nameof(Select));
 
@@ -66,6 +87,8 @@ namespace YourApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Announce(string prizeName, string prizeAmount, string scannedCode)
         {
+            if (IsEventExpired()) return RedirectToAction(nameof(Search));
+
             ViewBag.PrizeName = prizeName;
             ViewBag.PrizeAmount = prizeAmount;
 
