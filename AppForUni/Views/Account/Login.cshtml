@@ -1,6 +1,6 @@
-﻿
+﻿@using System.Security.Claims
 @{
-    ViewData["Title"] = "Admin Access";
+    ViewData["Title"] = "เข้าสู่ระบบผู้ดูแล";
     Layout = "_Layout";
 }
 
@@ -15,18 +15,19 @@
 <div class="login-container">
     <div class="login-card">
         <div class="login-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
         </div>
 
-        <h2 class="login-title">Admin Access</h2>
-        <p class="login-subtitle">Please enter your passcode to continue</p>
+        <h2 class="login-title">เข้าสู่ระบบผู้ดูแล</h2>
+        <p class="login-subtitle">กรุณากรอกรหัสผ่านเพื่อดำเนินการต่อ</p>
 
         <form asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
-        
-            
+
+
             @if (ViewBag.Error != null)
             {
                 <div class="alert alert-danger py-2 mb-3 small rounded-3">
@@ -35,22 +36,18 @@
             }
 
             <div class="form-group">
-                <input type="password" 
-                       name="password" 
-                       class="form-control form-control-lg" 
-                       placeholder="Passcode" 
-                       required 
-                       autofocus />
+                <input type="password" name="password" class="form-control form-control-lg" placeholder="รหัสผ่าน"
+                    required autofocus />
             </div>
 
             <button type="submit" class="btn btn-login">
-                Unlock System
+                เข้าสู่ระบบ
             </button>
         </form>
 
         <div class="mt-4">
             <a asp-controller="Prizes" asp-action="Search" class="text-decoration-none text-muted small hover-blue">
-                ← Back to Search
+                ← กลับหน้าค้นหา
             </a>
         </div>
     </div>

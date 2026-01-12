@@ -12,8 +12,6 @@
     bool isErrorOrInfo = (popupType == "error" || popupType == "info");
 }
 
-}
-
 <link rel="stylesheet" href="~/css/search.css" />
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -432,9 +430,9 @@
             <form asp-action="Search" method="post">
                 @Html.AntiForgeryToken()
                 <div class="input-group-custom">
-                    <label class="input-label" for="empSearch">EmployeeID</label>
+                    <label class="input-label" for="empSearch">รหัสพนักงาน</label>
                     <input id="empSearch" type="text" name="employeeId" class="search-input"
-                        placeholder="กรอก/สแกน EmployeeID" autofocus autocomplete="off" />
+                        placeholder="กรอก/สแกนรหัสพนักงาน" autofocus autocomplete="off" />
                 </div>
                 <button type="submit" class="btn-search-submit">ค้นหา</button>
             </form>
@@ -455,12 +453,12 @@
     </div>
 
     <!-- Winners Table Section within search-wrapper (New Design - Light Theme) -->
-    <div class="w-full max-w-3xl rounded-2xl overflow-hidden mt-8" style="background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 25px rgba(0,0,0,0.05);">
+    <div class="w-full max-w-3xl rounded-2xl overflow-hidden mt-8 mb-20" style="background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 25px rgba(0,0,0,0.05);">
         <!-- Table Header -->
         <div class="grid grid-cols-3 gap-4 px-4 md:px-8 py-4" style="background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 100%); border-bottom: 1px solid rgba(212, 175, 55, 0.2);">
-            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">Place</div>
-            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">Winner</div>
-            <div class="font-heading font-semibold text-sm md:text-base text-right" style="color: #b45309;">Prize</div>
+            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">ลำดับ</div>
+            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">รหัสพนักงาน</div>
+            <div class="font-heading font-semibold text-sm md:text-base text-right" style="color: #b45309;">รางวัล</div>
         </div>
 
         <div style="max-height: 600px; overflow-y: auto;">
@@ -471,24 +469,24 @@
                 {
                     i++;
                     string rowStyle = "background: transparent;";
-                    string rankDisplay = i + "th";
+                    string rankDisplay = "ที่ " + i;
                     string rankColor = "#64748b";
                     string rankIcon = "🎁";
                     string borderStyle = "border-bottom: 1px solid rgba(0,0,0,0.05);";
 
                     if (i == 1) {
                         rowStyle = "background: linear-gradient(90deg, #fefce8 0%, #ffffff 100%);";
-                        rankDisplay = "1st";
+                        rankDisplay = "ที่ 1";
                         rankColor = "#d97706";
                         rankIcon = "🥇";
                     } else if (i == 2) {
                         rowStyle = "background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);";
-                        rankDisplay = "2nd";
+                        rankDisplay = "ที่ 2";
                         rankColor = "#475569";
                         rankIcon = "🥈";
                     } else if (i == 3) {
                         rowStyle = "background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%);";
-                        rankDisplay = "3rd";
+                        rankDisplay = "ที่ 3";
                         rankColor = "#ea580c";
                         rankIcon = "🥉";
                     }
@@ -514,7 +512,7 @@
             else
             {
                 <div class="p-8 text-center" style="color: #94a3b8;">
-                    No winners announced yet.
+                    ยังไม่มีประกาศรายชื่อผู้โชคดี
                 </div>
             }
         </div>

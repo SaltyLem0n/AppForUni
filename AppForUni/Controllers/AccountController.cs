@@ -57,7 +57,7 @@ namespace YourApp.Controllers
                 return RedirectToAction("Index", "Employees");
             }
 
-            ViewBag.Error = "Incorrect Passcode";
+            ViewBag.Error = "รหัสผ่านไม่ถูกต้อง";
             ViewData["ReturnUrl"] = returnUrl; // Keep the return URL even if they fail
             return View();
         }
