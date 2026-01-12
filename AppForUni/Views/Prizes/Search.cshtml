@@ -5,6 +5,9 @@
     string popupType = (string)(ViewBag.PopupType ?? "");
     string employeeId = (string)(ViewBag.EmployeeId ?? "");
 
+    // Get the list of ALL winners
+    var allWinners = ViewBag.AllWinners as List<YourApp.Models.PrizeAward> ?? new List<YourApp.Models.PrizeAward>();
+
     bool isSuccess = popupType == "success";
     bool isErrorOrInfo = (popupType == "error" || popupType == "info");
 }
@@ -12,8 +15,126 @@
 <link rel="stylesheet" href="~/css/search.css" />
 
 <style>
-    @@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
+    @@importurl('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
 
+    /* --- Main Layout --- */
+    .search-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100%;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 10;
+    }
+
+    /* Left Side: Search Card */
+    .search-card-section {
+        flex: 1;
+        min-width: 320px;
+        max-width: 500px;
+    }
+
+    /* Right Side: Winners Table */
+    .winners-section {
+        flex: 1;
+        min-width: 300px;
+        max-width: 450px;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+        max-height: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .winners-header {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .winners-list-container {
+        overflow-y: auto;
+        flex-grow: 1;
+        padding-right: 5px;
+    }
+
+    /* Table Styles */
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-custom th {
+        text-align: left;
+        color: #64748b;
+        font-size: 14px;
+        padding: 8px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .table-custom td {
+        padding: 10px 8px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 15px;
+        color: #334155;
+    }
+
+    .table-custom tr:last-child td {
+        border-bottom: none;
+    }
+
+    .prize-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    /* Simple color coding for prizes */
+    .prize-1 {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    /* Gold */
+    .prize-2 {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    /* Silver/Grey */
+    .prize-3 {
+        background: #ffedd5;
+        color: #c2410c;
+    }
+
+    /* Bronze/Orange */
+
+    .emp-id-text {
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+    }
+
+    /* --- Popup CSS --- */
     .popup-overlay {
         position: fixed;
         top: 0;
@@ -30,7 +151,6 @@
         animation: fadeIn 0.4s ease-out;
     }
 
-    /* Winner Theme */
     .popup-container.winner-theme {
         background: #ffffff;
         font-family: 'Poppins', sans-serif;
@@ -41,6 +161,18 @@
         text-align: center;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.1s forwards;
+    }
+
+    .popup-container.nowin-theme {
+        background: #ffffff;
+        font-family: 'Quicksand', sans-serif;
+        color: #0f172a;
+        max-width: 480px;
+        border-radius: 28px;
+        padding: 56px 44px;
+        text-align: center;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+        animation: gentlePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
     }
 
     .trophy-icon {
@@ -54,7 +186,6 @@
         font-size: 48px;
         font-weight: 800;
         margin-bottom: 16px;
-        line-height: 1.2;
         color: #1e293b;
     }
 
@@ -100,23 +231,6 @@
         text-transform: uppercase;
     }
 
-    .btn-claim:hover {
-        transform: translateY(-3px);
-    }
-
-    /* No Win Theme */
-    .popup-container.nowin-theme {
-        background: #ffffff;
-        font-family: 'Quicksand', sans-serif;
-        color: #0f172a;
-        max-width: 480px;
-        border-radius: 28px;
-        padding: 56px 44px;
-        text-align: center;
-        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-        animation: gentlePopIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s forwards;
-    }
-
     .emoji-icon {
         font-size: 72px;
         display: inline-block;
@@ -136,20 +250,6 @@
         color: #3b82f6;
     }
 
-    .message-box {
-        padding: 24px;
-        border-radius: 18px;
-        margin: 28px 0;
-        background: rgba(59, 130, 246, 0.1);
-        border: 2px solid rgba(59, 130, 246, 0.2);
-    }
-
-    .message-text {
-        font-size: 17px;
-        line-height: 1.7;
-        font-weight: 500;
-    }
-
     .btn-try-again {
         padding: 16px 42px;
         border-radius: 50px;
@@ -163,11 +263,6 @@
         text-transform: uppercase;
     }
 
-    .btn-try-again:hover {
-        transform: translateY(-2px);
-    }
-
-    /* Animations (Same as above) */
     @@keyframes fadeIn {
         from {
             opacity: 0;
@@ -281,29 +376,84 @@
     <div class="mesh-blob blob-2"></div>
 </div>
 
-<div class="search-container">
-    <div class="search-card">
-        <h2 class="search-title">ค้นหาผู้ได้รับรางวัล</h2>
-        <form asp-action="Search" method="post">
-            @Html.AntiForgeryToken()
-            <div class="input-group-custom">
-                <label class="input-label" for="empSearch">EmployeeID</label>
-                <input id="empSearch" type="text" name="employeeId" class="search-input"
-                    placeholder="กรอก/สแกน EmployeeID แล้วกด Enter" autofocus autocomplete="off" />
-            </div>
-            <button type="submit" class="btn-search-submit">ค้นหา</button>
-        </form>
-        <div class="divider"></div>
-        @* <a asp-action="Select" class="btn-back-outline">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                style="margin-right:4px;">
-                <path d="M19 12H5" />
-                <path d="M12 19l-7-7 7-7" />
-            </svg>
-            กลับหน้าเลือกรางวัล
-        </a> *@
+<div class="search-wrapper">
+
+    <div class="search-card-section">
+        <div class="search-card" style="width:100%;">
+            <h2 class="search-title">ค้นหาผู้ได้รับรางวัล</h2>
+            <form asp-action="Search" method="post">
+                @Html.AntiForgeryToken()
+                <div class="input-group-custom">
+                    <label class="input-label" for="empSearch">EmployeeID</label>
+                    <input id="empSearch" type="text" name="employeeId" class="search-input"
+                        placeholder="กรอก/สแกน EmployeeID" autofocus autocomplete="off" />
+                </div>
+                <button type="submit" class="btn-search-submit">ค้นหา</button>
+            </form>
+            <div class="divider"></div>
+            
+            @*
+            <a asp-action="Select" class="btn-back-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right:4px;">
+                    <path d="M19 12H5" />
+                    <path d="M12 19l-7-7 7-7" />
+                </svg>
+                กลับหน้าเลือกรางวัล
+            </a>
+            *@
+        </div>
     </div>
+
+    <div class="winners-section">
+        <div class="winners-header">
+            <span>ทำเนียบผู้โชคดี (1st - 4th)</span>
+            <span
+                style="font-size:14px; background:#10b981; color:white; padding:2px 10px; border-radius:12px;">@allWinners.Count
+                รางวัล</span>
+        </div>
+
+        <div class="winners-list-container">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th style="width:140px;">Prize</th>
+                        <th>Winner ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (allWinners.Count > 0)
+                    {
+                        foreach (var w in allWinners)
+                        {
+                            // Basic logic to color code badges
+                            string badgeClass = "prize-badge";
+                            if (w.PrizeName.Contains("1")) badgeClass += " prize-1";
+                            else if (w.PrizeName.Contains("2")) badgeClass += " prize-2";
+                            else if (w.PrizeName.Contains("3")) badgeClass += " prize-3";
+
+                            <tr>
+                                <td>
+                                    <span class="@badgeClass">@w.PrizeName</span>
+                                </td>
+                                <td class="emp-id-text">@w.EmployeeID</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="2" style="text-align:center; color:#94a3b8; padding:20px;">
+                                ยังไม่มีการประกาศรางวัล
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <div id="winnerPopup" class="popup-overlay" style="@(isSuccess ? "display:flex;" : "display:none;")">
@@ -311,57 +461,52 @@
         <div class="trophy-icon">🏆</div>
         <h1 class="winner-title">@popupTitle</h1>
         <h2 class="winner-name">ID: @employeeId</h2>
-
         <div class="prize-box">
-            <div class="prize-label">คุณได้รับรางวัล</div>
+            <div class="prize-label">You Won</div>
             <div class="prize-name-text">@popupMsg</div>
         </div>
-
-        <button class="btn-claim" onclick="closePopup('winnerPopup')">ปิด</button>
+        <button class="btn-claim" onclick="closePopup('winnerPopup')">Close</button>
     </div>
 </div>
 
 <div id="errorPopup" class="popup-overlay" style="@(isErrorOrInfo ? "display:flex;" : "display:none;")">
-    <div class="popup-container nowin-theme" id="errorContainer">
-        <div class="icon-container" style="margin-bottom:28px;">
-            <div class="emoji-icon">
-                @if (popupType == "error")
-                {
-                    <text>❌</text>
-                }
-                else
-                {
-
-                    <text>😢</text>
-                }
-            </div>
+    <div class="popup-container nowin-theme">
+        <div class="emoji-icon">
+            @if (popupType == "error")
+            {
+                <text>❌</text>
+            }
+            else
+            {
+                <text>😢</text>
+            }
         </div>
         <h1 class="main-title">@popupTitle</h1>
         <p class="encouragement">
             @if (popupType == "error")
             {
-                <text>เกิดข้อผิดพลาด</text>
+                <text>Error</text>
             }
             else
             {
-
-                <text>ขออภัย</text>
+                <text>Sorry!</text>
             }
         </p>
-        <div class="message-box">
-            <p class="message-text">@popupMsg</p>
+        <div style="padding:15px; background:rgba(59,130,246,0.1); border-radius:12px; margin:20px 0;">
+            <p style="font-size:16px;">@popupMsg</p>
         </div>
-        <button class="btn-try-again" onclick="closePopup('errorPopup')">ปิด</button>
+        <button class="btn-try-again" onclick="closePopup('errorPopup')">Close</button>
     </div>
 </div>
 
 <script>
     function closePopup(id) {
         document.getElementById(id).style.display = 'none';
+        document.getElementById('empSearch').value = ''; // Clear input on close
         document.getElementById('empSearch').focus();
     }
 
-    // Trigger animations if Winner Popup is shown
+    // Animation Logic
     window.addEventListener('load', () => {
         const isWinner = document.getElementById('winnerPopup').style.display === 'flex';
         if (isWinner) {
@@ -371,7 +516,7 @@
         }
     });
 
-    // --- Animation Functions (Same as Announce) ---
+    // Helper Animation Functions
     function createConfetti() {
         const colors = ['#fbbf24', '#10b981', '#6366f1', '#ec4899', '#f59e0b', '#8b5cf6'];
         for (let i = 0; i < 50; i++) {

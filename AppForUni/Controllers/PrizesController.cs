@@ -10,10 +10,9 @@ namespace YourApp.Controllers
         private readonly AppDbContext _db;
         public PrizesController(AppDbContext db) => _db = db;
 
-        // 1) หน้าเลือกรางวัล 10 ปุ่ม
+        // 1) Select Prize Page
         public IActionResult Select()
         {
-            // กำหนดชุดรางวัลตัวอย่าง (ปรับข้อความ/จำนวนเงินได้ตามจริง)
             var prizes = new List<(string PrizeName, string PrizeAmount)>
             {
                 ("รางวัลที่ 1",  "เงินรางวัล 10,000 บาท"),
@@ -21,30 +20,57 @@ namespace YourApp.Controllers
                 ("รางวัลที่ 3",  "เงินรางวัล 6,000 บาท"),
                 ("รางวัลที่ 4",  "เงินรางวัล 5,000 บาท")
             };
-
             return View(prizes);
         }
 
-        // 2) GET หน้า “ประกาศรางวัล”
+
+        // --- HELPER: Get winners ONLY for the specific prizeName ---
+        private async Task<List<string>> GetWinnerIdsAsync(string prizeName)
+        {
+            return await _db.PrizeAwards
+                .AsNoTracking()
+                .Where(x => x.PrizeName == prizeName) // <--- CRITICAL: Filters by current prize only
+                .OrderByDescending(x => x.AwardedAt)
+                .Select(x => x.EmployeeID)
+                .ToListAsync();
+        }
+
+        // --- NEW Helper for Search Page (All Prizes: 1st - 4th) ---
+        private async Task<List<PrizeAward>> GetAllWinnersAsync()
+        {
+            return await _db.PrizeAwards
+                .AsNoTracking()
+                .OrderBy(x => x.PrizeName)          // Group by "รางวัลที่ 1", "2", etc.
+                .ThenByDescending(x => x.AwardedAt) // Latest winners on top within group
+                .ToListAsync();
+        }
+
+        // 2) GET: Announce Page
         [HttpGet]
-        public IActionResult Announce(string prizeName, string prizeAmount)
+        public async Task<IActionResult> Announce(string prizeName, string prizeAmount)
         {
             if (string.IsNullOrWhiteSpace(prizeName) || string.IsNullOrWhiteSpace(prizeAmount))
                 return RedirectToAction(nameof(Select));
 
             ViewBag.PrizeName = prizeName;
             ViewBag.PrizeAmount = prizeAmount;
+
+            // Fetch list ONLY for this prize
+            ViewBag.WinnerIds = await GetWinnerIdsAsync(prizeName);
+
             return View();
         }
 
-        //
-        // 2) POST: รับค่าบาร์โค้ด(=EmployeeID) -> lookup employee -> บันทึกรางวัลใน Transaction เดียว
+        // 2) POST: Submit Winner
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Announce(string prizeName, string prizeAmount, string scannedCode)
         {
             ViewBag.PrizeName = prizeName;
             ViewBag.PrizeAmount = prizeAmount;
+
+            // Always fetch current winners for the table, even if there is an error later
+            ViewBag.WinnerIds = await GetWinnerIdsAsync(prizeName);
 
             scannedCode = (scannedCode ?? "").Trim();
 
@@ -54,7 +80,6 @@ namespace YourApp.Controllers
                 return View();
             }
 
-            // 1) หา employee
             var emp = await _db.Employees.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.EmployeeID == scannedCode);
 
@@ -64,25 +89,16 @@ namespace YourApp.Controllers
                 return View();
             }
 
-            // 2) บันทึกรางวัลแบบ atomic (Transaction)
+            // Transaction
             using var tx = await _db.Database.BeginTransactionAsync();
-
             try
             {
-                // --- NEW LOGIC START: Check Limits ---
+                // -- Logic: Check Limits --
+                int limit = 1;
+                if (prizeName == "รางวัลที่ 3") limit = 10;
+                else if (prizeName == "รางวัลที่ 4") limit = 20;
 
-                // Determine the limit based on the prize name
-                int limit = 1; // Default for 1st and 2nd prizes
-                if (prizeName == "รางวัลที่ 3")
-                {
-                    limit = 10;
-                }
-                else if (prizeName == "รางวัลที่ 4")
-                {
-                    limit = 20;
-                }
-
-                // Count how many times this prize has already been awarded
+                // Count current winners for THIS prize
                 var currentCount = await _db.PrizeAwards.CountAsync(x => x.PrizeName == prizeName);
 
                 if (currentCount >= limit)
@@ -90,25 +106,19 @@ namespace YourApp.Controllers
                     ViewBag.Error = $"รางวัลนี้ครบจำนวนแล้ว ({limit} รางวัล): {prizeName}";
                     return View(emp);
                 }
-                // --- NEW LOGIC END ---
 
-
-                // กันกรณีพนักงานคนนี้ได้รางวัลแล้ว (Existing logic)
+                // Check if employee already won ANY prize (Optional: depending on your rules)
+                // If they can win multiple DIFFERENT prizes, change this logic. 
+                // Currently checks if they won ANYTHING.
                 var empAlreadyWon = await _db.PrizeAwards.AnyAsync(x => x.EmployeeID == emp.EmployeeID);
                 if (empAlreadyWon)
                 {
-                    var old = await _db.PrizeAwards.AsNoTracking()
-                        .FirstAsync(x => x.EmployeeID == emp.EmployeeID);
-
-                    ViewBag.Error = $"พนักงานนี้ได้รับรางวัลแล้ว: {old.PrizeName} ({old.PrizeAmount})";
+                    var old = await _db.PrizeAwards.AsNoTracking().FirstAsync(x => x.EmployeeID == emp.EmployeeID);
+                    ViewBag.Error = $"พนักงานนี้ได้รับรางวัลแล้ว: {old.PrizeName}";
                     return View(emp);
                 }
 
-                if (_db.PrizeAwards is null)
-                {
-                    throw new InvalidOperationException("Database context is not initialized.");
-                }
-
+                // Add Award
                 _db.PrizeAwards.Add(new PrizeAward
                 {
                     EmployeeID = emp.EmployeeID,
@@ -120,7 +130,9 @@ namespace YourApp.Controllers
                 await _db.SaveChangesAsync();
                 await tx.CommitAsync();
 
-                // Optional: Show how many are left in the success message
+                // RE-FETCH the list so the new winner appears immediately in the table
+                ViewBag.WinnerIds = await GetWinnerIdsAsync(prizeName);
+
                 ViewBag.Success = $"บันทึกผลรางวัลเรียบร้อย (มอบแล้ว {currentCount + 1}/{limit})";
                 return View(emp);
             }
@@ -132,20 +144,26 @@ namespace YourApp.Controllers
             }
         }
 
-        // 3) หน้า Search (GET)
+        // Search Pages (Keep as is)
+
+        // 3) Search Page (GET)
         [HttpGet]
-        public IActionResult Search()
+        public async Task<IActionResult> Search()
         {
+            // Fetch ALL winners for the table
+            ViewBag.AllWinners = await GetAllWinnersAsync();
             return View();
         }
 
-        // 3) หน้า Search (POST): ค้นหา EmployeeID แล้วให้ popup
+        // 3) Search Page (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(string employeeId)
         {
-            employeeId = (employeeId ?? "").Trim();
+            // Fetch ALL winners so table persists after search
+            ViewBag.AllWinners = await GetAllWinnersAsync();
 
+            employeeId = (employeeId ?? "").Trim();
             if (string.IsNullOrWhiteSpace(employeeId))
             {
                 ViewBag.PopupType = "error";
@@ -154,8 +172,7 @@ namespace YourApp.Controllers
                 return View();
             }
 
-            var award = await _db.PrizeAwards.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.EmployeeID == employeeId);
+            var award = await _db.PrizeAwards.AsNoTracking().FirstOrDefaultAsync(x => x.EmployeeID == employeeId);
 
             if (award != null)
             {
