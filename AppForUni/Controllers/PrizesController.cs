@@ -210,6 +210,15 @@ namespace YourApp.Controllers
                 ViewBag.PopupMessage = "";
             }
 
+            // Fetch Employee Name regardless of win/loss if the ID exists (useful for display)
+            // Or strictly as per request, just getting it is enough.
+            // But specifically for the winner popup which uses ViewBag.EmployeeName:
+            var employee = await _db.Employees.AsNoTracking().FirstOrDefaultAsync(x => x.EmployeeID == employeeId);
+            if (employee != null)
+            {
+                ViewBag.EmployeeName = employee.EmployeeName;
+            }
+
             ViewBag.EmployeeId = employeeId;
             return View();
         }
