@@ -167,7 +167,7 @@ namespace YourApp.Controllers
             if (string.IsNullOrWhiteSpace(employeeId))
             {
                 ViewBag.PopupType = "error";
-                ViewBag.PopupTitle = "Error";
+                ViewBag.PopupTitle = "เกิดข้อผิดพลาด";
                 ViewBag.PopupMessage = "กรุณากรอก EmployeeID";
                 return View();
             }
@@ -177,13 +177,13 @@ namespace YourApp.Controllers
             if (award != null)
             {
                 ViewBag.PopupType = "success";
-                ViewBag.PopupTitle = "Congratulation";
+                ViewBag.PopupTitle = "ขอแสดงความยินดี";
                 ViewBag.PopupMessage = $"{award.PrizeName} - {award.PrizeAmount}";
             }
             else
             {
                 ViewBag.PopupType = "info";
-                ViewBag.PopupTitle = "Sorry, see you next year 2027";
+                ViewBag.PopupTitle = "เสียใจด้วย ปีหน้าเอาใหม่นะ";
                 ViewBag.PopupMessage = "";
             }
 

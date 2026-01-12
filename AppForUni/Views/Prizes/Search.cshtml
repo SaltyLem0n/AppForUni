@@ -391,16 +391,16 @@
                 <button type="submit" class="btn-search-submit">ค้นหา</button>
             </form>
             <div class="divider"></div>
-            
+
             @*
             <a asp-action="Select" class="btn-back-outline">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    style="margin-right:4px;">
-                    <path d="M19 12H5" />
-                    <path d="M12 19l-7-7 7-7" />
-                </svg>
-                กลับหน้าเลือกรางวัล
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="margin-right:4px;">
+            <path d="M19 12H5" />
+            <path d="M12 19l-7-7 7-7" />
+            </svg>
+            กลับหน้าเลือกรางวัล
             </a>
             *@
         </div>
@@ -418,8 +418,8 @@
             <table class="table-custom">
                 <thead>
                     <tr>
-                        <th style="width:140px;">Prize</th>
-                        <th>Winner ID</th>
+                        <th style="width:140px;">รางวัล</th>
+                        <th>รหัสพนักงาน</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -462,10 +462,10 @@
         <h1 class="winner-title">@popupTitle</h1>
         <h2 class="winner-name">ID: @employeeId</h2>
         <div class="prize-box">
-            <div class="prize-label">You Won</div>
+            <div class="prize-label">คุณได้รับรางวัล</div>
             <div class="prize-name-text">@popupMsg</div>
         </div>
-        <button class="btn-claim" onclick="closePopup('winnerPopup')">Close</button>
+        <button class="btn-claim" onclick="closePopup('winnerPopup')">ปิด</button>
     </div>
 </div>
 
@@ -485,17 +485,17 @@
         <p class="encouragement">
             @if (popupType == "error")
             {
-                <text>Error</text>
+                <text>ข้อผิดพลาด</text>
             }
             else
             {
-                <text>Sorry!</text>
+                <text>เสียใจด้วย!</text>
             }
         </p>
         <div style="padding:15px; background:rgba(59,130,246,0.1); border-radius:12px; margin:20px 0;">
             <p style="font-size:16px;">@popupMsg</p>
         </div>
-        <button class="btn-try-again" onclick="closePopup('errorPopup')">Close</button>
+        <button class="btn-try-again" onclick="closePopup('errorPopup')">ปิด</button>
     </div>
 </div>
 
