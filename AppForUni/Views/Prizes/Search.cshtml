@@ -12,7 +12,13 @@
     bool isErrorOrInfo = (popupType == "error" || popupType == "info");
 }
 
+}
+
 <link rel="stylesheet" href="~/css/search.css" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
 
 <style>
     @@importurl('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
@@ -20,10 +26,10 @@
     /* --- Main Layout --- */
     .search-wrapper {
         display: flex;
-        flex-wrap: wrap;
-        gap: 30px;
-        justify-content: center;
-        align-items: flex-start;
+        flex-direction: column; /* Stack vertically as requested */
+        gap: 40px;
+        justify-content: flex-start;
+        align-items: center;
         width: 100%;
         max-width: 1200px;
         margin: 40px auto;
@@ -33,10 +39,11 @@
     }
 
     /* Left Side: Search Card */
+    /* Left Side: Search Card */
     .search-card-section {
-        flex: 1;
-        min-width: 320px;
-        max-width: 500px;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
     }
 
     /* Right Side: Winners Table */
@@ -72,6 +79,47 @@
         overflow-y: auto;
         flex-grow: 1;
         padding-right: 5px;
+    }
+
+    /* --- New Design Animations & Fonts --- */
+    .font-heading {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    
+    .font-body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+    }
+    
+    @@keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    
+    .gold-shimmer {
+      background: linear-gradient(90deg, #D4AF37 0%, #F5E7A3 25%, #D4AF37 50%, #F5E7A3 75%, #D4AF37 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @@keyframes float-trophy {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .trophy-float-anim {
+      animation: float-trophy 3s ease-in-out infinite;
+    }
+    
+    .row-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .row-hover:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
     }
 
     /* Table Styles */
@@ -406,51 +454,69 @@
         </div>
     </div>
 
-    <div class="winners-section">
-        <div class="winners-header">
-            <span>ทำเนียบผู้โชคดี (1st - 4th)</span>
-            <span
-                style="font-size:14px; background:#10b981; color:white; padding:2px 10px; border-radius:12px;">@allWinners.Count
-                รางวัล</span>
+    <!-- Winners Table Section within search-wrapper (New Design - Light Theme) -->
+    <div class="w-full max-w-3xl rounded-2xl overflow-hidden mt-8" style="background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 25px rgba(0,0,0,0.05);">
+        <!-- Table Header -->
+        <div class="grid grid-cols-3 gap-4 px-4 md:px-8 py-4" style="background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 100%); border-bottom: 1px solid rgba(212, 175, 55, 0.2);">
+            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">Place</div>
+            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">Winner</div>
+            <div class="font-heading font-semibold text-sm md:text-base text-right" style="color: #b45309;">Prize</div>
         </div>
 
-        <div class="winners-list-container">
-            <table class="table-custom">
-                <thead>
-                    <tr>
-                        <th style="width:140px;">รางวัล</th>
-                        <th>รหัสพนักงาน</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (allWinners.Count > 0)
-                    {
-                        foreach (var w in allWinners)
-                        {
-                            // Basic logic to color code badges
-                            string badgeClass = "prize-badge";
-                            if (w.PrizeName.Contains("1")) badgeClass += " prize-1";
-                            else if (w.PrizeName.Contains("2")) badgeClass += " prize-2";
-                            else if (w.PrizeName.Contains("3")) badgeClass += " prize-3";
+        <div style="max-height: 600px; overflow-y: auto;">
+            @if (allWinners != null && allWinners.Count > 0)
+            {
+                int i = 0;
+                foreach (var w in allWinners)
+                {
+                    i++;
+                    string rowStyle = "background: transparent;";
+                    string rankDisplay = i + "th";
+                    string rankColor = "#64748b";
+                    string rankIcon = "🎁";
+                    string borderStyle = "border-bottom: 1px solid rgba(0,0,0,0.05);";
 
-                            <tr>
-                                <td>
-                                    <span class="@badgeClass">@w.PrizeName</span>
-                                </td>
-                                <td class="emp-id-text">@w.EmployeeID</td>
-                            </tr>
-                        }
+                    if (i == 1) {
+                        rowStyle = "background: linear-gradient(90deg, #fefce8 0%, #ffffff 100%);";
+                        rankDisplay = "1st";
+                        rankColor = "#d97706";
+                        rankIcon = "🥇";
+                    } else if (i == 2) {
+                        rowStyle = "background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);";
+                        rankDisplay = "2nd";
+                        rankColor = "#475569";
+                        rankIcon = "🥈";
+                    } else if (i == 3) {
+                        rowStyle = "background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%);";
+                        rankDisplay = "3rd";
+                        rankColor = "#ea580c";
+                        rankIcon = "🥉";
                     }
-                    else
-                    {
-                        <tr>
-                            <td colspan="2" style="text-align:center; color:#94a3b8; padding:20px;">
-                                ยังไม่มีการประกาศรางวัล
-                            </td>
-                        </tr>
+
+                    if (i == allWinners.Count) {
+                        borderStyle = "border-bottom: none;";
                     }
-                </tbody>
-            </table>
+
+                    <div class="row-hover grid grid-cols-3 gap-4 px-4 md:px-8 py-5 items-center" style="@rowStyle @borderStyle">
+                        <div class="flex items-center gap-2 md:gap-3">
+                            <span class="text-2xl md:text-3xl">@rankIcon</span> 
+                            <span class="font-bold text-sm md:text-lg" style="color: @rankColor;">@rankDisplay</span>
+                        </div>
+                        <div class="font-semibold text-sm md:text-base truncate" style="color: #1e293b;">
+                            @w.EmployeeID
+                        </div>
+                        <div class="text-right text-sm md:text-base" style="color: #b45309;">
+                            @w.PrizeName
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="p-8 text-center" style="color: #94a3b8;">
+                    No winners announced yet.
+                </div>
+            }
         </div>
     </div>
 
