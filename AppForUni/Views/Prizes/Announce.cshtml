@@ -189,7 +189,13 @@
     }
 
     .winner-name {
-        font-size: 32px;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #fbbf24;
+    }
+    .winner-department {
+        font-size: 22px;
         font-weight: 700;
         margin-bottom: 12px;
         color: #fbbf24;
@@ -468,8 +474,9 @@
     <div class="popup-container winner-theme" id="winnerContainer">
         <div class="trophy-icon">🏆</div>
         <h1 class="winner-title">ขอแสดงความยินดี!</h1>
-        <h2 class="winner-name">ID: @Model?.EmployeeID</h2>
-        <h2 class="winner-name">@Model?.EmployeeName</h2>
+        <h3 class="winner-name">ID: @Model?.EmployeeID</h3>
+        <h3 class="winner-name">@Model?.EmployeeName</h3>
+        <h4 class="winner-department">@Model?.Department</h4>
         <div class="prize-box">
             <div style="font-size:14px; text-transform:uppercase;">คุณได้รับรางวัล</div>
             <div style="font-size:24px; font-weight:700;">@prizeName</div>

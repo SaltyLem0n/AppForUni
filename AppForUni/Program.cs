@@ -41,6 +41,6 @@ app.UseAuthorization();
 // 3. YOUR ROUTE CONFIGURATION
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Prizes}/{action=Select}/{id?}"); // Start page = Prizes/Select
+    pattern: "{controller=Prizes}/{action=Search}/{id?}"); // Start page = Prizes/Search
 
 app.Run();

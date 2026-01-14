@@ -451,81 +451,75 @@
         </div>
     </div>
 
-    <!-- Winners Table Section - Bootstrap Card -->
-    <div class="card shadow-sm mt-4 mb-5 winners-card">
-        <div class="card-header bg-gradient-warning text-white py-3">
-            <h5 class="card-title mb-0 fw-bold">
-                <i class="bi bi-trophy-fill me-2"></i>รายชื่อผู้โชคดี
-            </h5>
+    <!-- Winners Table Section - Gold Theme -->
+    <div class="winners-table-container">
+        <!-- Table Header -->
+        <div class="winners-table-header">
+            <div class="header-cell">อันดับ</div>
+            <div class="header-cell">รหัสพนักงาน</div>
+            <div class="header-cell text-right">รางวัล</div>
         </div>
-        <div class="card-body p-0">
-            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-                <table class="table table-hover mb-0 winners-table">
-                    <thead class="table-light sticky-top">
-                        <tr>
-                            <th scope="col" class="text-center" style="width: 15%;">ลำดับ</th>
-                            <th scope="col" style="width: 35%;">รหัสพนักงาน</th>
-                            <th scope="col" class="text-end" style="width: 50%;">รางวัล</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
+        <!-- Table Body -->
+        <div class="winners-table-body">
             @if (allWinners != null && allWinners.Count > 0)
             {
                 int i = 0;
                 foreach (var w in allWinners)
                 {
                     i++;
-                    string badgeClass = "bg-secondary";
                     string rankIcon = "🎁";
-                    string rowClass = "";
+                    string rankText = i + "th";
+                    string rankColor = "#9ca3af";
+                    string rowBg = "transparent";
+                    string prizeColor = "#9ca3af";
 
                     if (i == 1)
                     {
-                        badgeClass = "bg-warning text-dark";
                         rankIcon = "🥇";
-                        rowClass = "table-warning";
+                        rankText = "1st";
+                        rankColor = "#FFD700";
+                        rowBg = "linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, transparent 100%)";
+                        prizeColor = "#F5E7A3";
                     }
                     else if (i == 2)
                     {
-                        badgeClass = "bg-secondary";
                         rankIcon = "🥈";
-                        rowClass = "table-light";
+                        rankText = "2nd";
+                        rankColor = "#C0C0C0";
+                        rowBg = "linear-gradient(90deg, rgba(192, 192, 192, 0.1) 0%, transparent 100%)";
+                        prizeColor = "#d1d5db";
                     }
                     else if (i == 3)
                     {
-                        badgeClass = "bg-danger";
                         rankIcon = "🥉";
-                        rowClass = "table-danger table-danger-light";
+                        rankText = "3rd";
+                        rankColor = "#CD7F32";
+                        rowBg = "linear-gradient(90deg, rgba(205, 127, 50, 0.1) 0%, transparent 100%)";
+                        prizeColor = "#d4a574";
                     }
 
-                                        <tr class="@rowClass">
-                                            <td class="text-center align-middle">
-                                                <span class="rank-emoji me-1">@rankIcon</span>
-                                                <span class="badge @badgeClass">ที่ @i</span>
-                                            </td>
-                                            <td class="align-middle fw-semibold">
-                                                <code class="text-dark">@w.EmployeeID</code>
-                                            </td>
-                                            <td class="align-middle text-end">
-                                                <span class="badge bg-primary-subtle text-primary px-3 py-2">
-                                                    @w.PrizeName
-                                                </span>
-                                            </td>
-                                        </tr>
+                    <div class="winner-row row-hover" style="background: @rowBg;">
+                        <div class="winner-cell">
+                            <span class="rank-emoji-large">@rankIcon</span>
+                            <span class="rank-text" style="color: @rankColor;">@rankText</span>
+                        </div>
+                        <div class="winner-cell winner-name">
+                            @w.EmployeeID
+                        </div>
+                        <div class="winner-cell text-right prize-text" style="color: @prizeColor;">
+                            @w.PrizeName
+                        </div>
+                    </div>
                 }
             }
             else
             {
-                                        <tr>
-                                            <td colspan="3" class="text-center text-muted py-5">
-                                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                                ยังไม่มีประกาศรายชื่อผู้โชคดี
-                                            </td>
-                                        </tr>
+                <div class="empty-state">
+                    <div class="empty-icon">🏆</div>
+                    <div class="empty-text">ยังไม่มีประกาศรายชื่อผู้โชคดี</div>
+                </div>
             }
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 

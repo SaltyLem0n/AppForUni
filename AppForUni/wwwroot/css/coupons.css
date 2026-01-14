@@ -12,7 +12,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #111;
-    background-color: #555; /* Dark bg for screen view */
+    background-color: #555;
+    /* Dark bg for screen view */
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -31,16 +32,16 @@ body {
     background: white;
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-    .toolbar button {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+.toolbar button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
 .btn-back {
     background-color: #eee;
@@ -58,7 +59,7 @@ body {
     width: 210mm;
     min-height: 297mm;
     padding: 0;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -67,8 +68,10 @@ body {
 
 /* --- COUPON --- */
 .coupon {
-    width: 99mm; /* Approx half A4 width taking margins into account */
-    height: 56mm; /* Approx 1/5th A4 height */
+    width: 99mm;
+    /* Approx half A4 width taking margins into account */
+    height: 56mm;
+    /* Approx 1/5th A4 height */
     box-sizing: border-box;
     border: 1px dashed #ccc;
     position: relative;
@@ -120,15 +123,18 @@ body {
 .c-body {
     flex-grow: 1;
     padding: 6px 12px;
-    display: block; /* Changed from flex to block to allow layering */
+    display: block;
+    /* Changed from flex to block to allow layering */
     position: relative;
 }
 
 /* Info Area (Text) - Blue Zone */
 .c-info {
-    width: 100%; /* Full Width */
+    width: 100%;
+    /* Full Width */
     position: relative;
-    z-index: 20; /* Higher z-index to sit ON TOP of barcode */
+    z-index: 20;
+    /* Higher z-index to sit ON TOP of barcode */
     /* Add a slight background or shadow if you want text to pop over barcode, 
        but typically for print we just let it overlap cleanly. */
 }
@@ -137,13 +143,14 @@ body {
 .c-dept {
     color: var(--theme-blue);
     font-weight: 500;
-    font-size: 10px;
+    font-size: 13px;
     text-transform: uppercase;
     margin-bottom: 4px;
     border-bottom: 1px solid #eee;
     padding-bottom: 2px;
     display: block;
-    white-space: normal; /* Wraps text */
+    white-space: normal;
+    /* Wraps text */
     overflow: visible;
     line-height: 1.2;
 }
@@ -157,7 +164,7 @@ body {
 }
 
 .c-value {
-    font-size: 10px;
+    font-size: 15px;
     font-weight: 500;
     color: #333;
     margin-bottom: 2px;
@@ -166,8 +173,10 @@ body {
 /* Barcode Area - Red Zone */
 .c-code-area {
     /* Significantly Bigger */
-    width: 270px; /* Wider area */
-    max-width: 80%; /* Don't exceed container */
+    width: 230px;
+    /* Wider area */
+    max-width: 80%;
+    /* Don't exceed container */
     /* Positioned Bottom Right */
     position: absolute;
     right: 0px;
@@ -178,7 +187,8 @@ body {
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-end;
-    opacity: 1; /* Keep opaque for scanning reliability */
+    opacity: 1;
+    /* Keep opaque for scanning reliability */
     padding: 0;
     margin: 0;
 }
@@ -187,9 +197,8 @@ body {
     width: 100%;
     height: auto;
     /* Allow it to be tall */
-    max-height: 45mm;
+    max-height: 40mm;
     margin-bottom: 1px
-    
 }
 
 /* Footer */
@@ -203,7 +212,8 @@ body {
     letter-spacing: 1px;
     font-weight: 600;
     position: relative;
-    z-index: 30; /* Footer stays on top */
+    z-index: 30;
+    /* Footer stays on top */
 }
 
 /* --- PRINT MODE --- */
@@ -211,7 +221,8 @@ body {
     body {
         background: none;
         padding: 0;
-        margin: 0;
+        margin-left: 30px;
+        margin-top: 10px;
     }
 
     .toolbar {
@@ -243,7 +254,9 @@ body {
         page-break-inside: avoid;
     }
 
-    .c-header, .c-footer, .c-number {
+    .c-header,
+    .c-footer,
+    .c-number {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
