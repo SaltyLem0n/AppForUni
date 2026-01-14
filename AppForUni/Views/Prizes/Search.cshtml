@@ -533,16 +533,16 @@
 
    
     <!-- Winners Table Section - Standalone Table with Light Theme -->
-    <div class="winners-table-wrapper-new w-full max-w-5xl mx-auto">
+    <div class="winners-table-wrapper-new w-full max-w-5xl mx-auto mb-6">
         <!-- Table Container -> Light Theme -->
-        <div class="rounded-2xl overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); max-height: 70vh;">
-            <div class="table-scroll-container overflow-auto" style="max-height: 70vh;">
+        <div class="rounded-2xl overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); max-height: 65vh;">
+            <div class="table-scroll-container overflow-auto" style="max-height: 65vh;">
                 <table class="w-full text-left border-collapse" id="mainTable">
                     <thead class="sticky top-0 z-10" style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
-                        <tr class="text-lg uppercase tracking-wider font-bold" style="color: #004aad;">
-                            <th class="p-4 min-w-[180px]">รางวัล </th>
-                            <th class="p-4 min-w-[80px] text-center">ลำดับ </th>
-                            <th class="p-4 min-w-[250px] text-right">รหัสบุคลากร </th>
+                        <tr class="text-base md:text-lg uppercase tracking-wider font-bold" style="color: #004aad;">
+                            <th class="p-2 md:p-4 w-auto md:min-w-[180px]">รางวัล </th>
+                            <th class="p-2 md:p-4 w-auto text-center">ลำดับ </th>
+                            <th class="p-2 md:p-4 w-auto text-right">รหัสบุคลากร </th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" class="text-sm divide-y" style="divide-color: #f1f5f9;">
@@ -574,17 +574,17 @@
                                 if (i == 1 && !w.PrizeName.Contains("รางวัล")) { emoji = "🏆"; bgColor = "#fefce8"; prizeTextColor = "#b45309"; }
                             
                                 <tr class="table-tbody-tr" style="background: @bgColor; transition: background-color 0.2s;">
-                                    <td class="p-4">
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-2xl">@emoji</span>
+                                    <td class="p-2 md:p-4">
+                                        <div class="flex items-center gap-2 md:gap-3">
+                                            <span class="text-xl md:text-2xl">@emoji</span>
                                             <div>
-                                                <div class="font-semibold" style="color: @prizeTextColor;">@w.PrizeName</div>
-                                                <div class="text-xs" style="color: #64748b;">@amount</div>
+                                                <div class="font-semibold text-sm md:text-base" style="color: @prizeTextColor;">@w.PrizeName</div>
+                                                <div class="text-[10px] md:text-xs" style="color: #64748b;">@amount</div>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="p-4 text-center font-semibold" style="color: @rankTextColor;">@i</td>
-                                    <td class="p-4 text-right font-mono font-bold text-lg" style="color: @idTextColor; letter-spacing: 0.05em;">@w.EmployeeID</td>
+                                    <td class="p-2 md:p-4 text-center font-semibold text-sm md:text-base" style="color: @rankTextColor;">@i</td>
+                                    <td class="p-2 md:p-4 text-right font-mono font-bold text-base md:text-lg" style="color: @idTextColor; letter-spacing: 0.05em;">@w.EmployeeID</td>
                                 </tr>
                             }
                         }
