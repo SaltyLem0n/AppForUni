@@ -2,7 +2,8 @@
 @inject IConfiguration Configuration
 @{
     bool isExpired = false;
-    if (DateTime.TryParse(Configuration["EventSettings:EventEndDate"], out var endDate))
+    if (DateTime.TryParse(Configuration["EventSettings:EventEndDate"], System.Globalization.CultureInfo.InvariantCulture,
+    System.Globalization.DateTimeStyles.None, out var endDate))
     {
         isExpired = DateTime.Now > endDate;
     }
@@ -15,9 +16,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RSU360 DataCentric</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AppForUni.styles.css" asp-append-version="true" />
 </head>
+
 
 <body>
     <header>
@@ -36,12 +39,12 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <!-- Navigation Links -->
-                        
+
                         @if (!isExpired)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Employees"
-                                   asp-action="Index">รายชื่อพนักงาน</a>
+                                    asp-action="Index">รายชื่อพนักงาน</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Select">เลือกรางวัล</a>
@@ -51,7 +54,7 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Prizes" asp-action="Search">ค้นหารายชื่อ</a>
                         </li>
-               
+
                     </ul>
                 </div>
             </div>

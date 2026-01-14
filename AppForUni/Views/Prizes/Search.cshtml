@@ -13,7 +13,6 @@
 }
 
 <link rel="stylesheet" href="~/css/search.css" />
-<script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
@@ -83,16 +82,16 @@
     .font-heading {
       font-family: 'Playfair Display', Georgia, serif;
     }
-    
+
     .font-body {
       font-family: 'DM Sans', system-ui, sans-serif;
     }
-    
+
     @@keyframes shimmer {
       0% { background-position: -200% center; }
       100% { background-position: 200% center; }
     }
-    
+
     .gold-shimmer {
       background: linear-gradient(90deg, #D4AF37 0%, #F5E7A3 25%, #D4AF37 50%, #F5E7A3 75%, #D4AF37 100%);
       background-size: 200% auto;
@@ -101,20 +100,20 @@
       background-clip: text;
       animation: shimmer 3s linear infinite;
     }
-    
+
     @@keyframes float-trophy {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
-    
+
     .trophy-float-anim {
       animation: float-trophy 3s ease-in-out infinite;
     }
-    
+
     .row-hover {
       transition: all 0.3s ease;
     }
-    
+
     .row-hover:hover {
       transform: scale(1.02);
       box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
@@ -452,69 +451,81 @@
         </div>
     </div>
 
-    <!-- Winners Table Section within search-wrapper (New Design - Light Theme) -->
-    <div class="w-full max-w-3xl rounded-2xl overflow-hidden mt-8 mb-20" style="background: #ffffff; border: 1px solid rgba(212, 175, 55, 0.3); box-shadow: 0 4px 25px rgba(0,0,0,0.05);">
-        <!-- Table Header -->
-        <div class="grid grid-cols-3 gap-4 px-4 md:px-8 py-4" style="background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 100%); border-bottom: 1px solid rgba(212, 175, 55, 0.2);">
-            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">ลำดับ</div>
-            <div class="font-heading font-semibold text-sm md:text-base" style="color: #b45309;">รหัสพนักงาน</div>
-            <div class="font-heading font-semibold text-sm md:text-base text-right" style="color: #b45309;">รางวัล</div>
+    <!-- Winners Table Section - Bootstrap Card -->
+    <div class="card shadow-sm mt-4 mb-5 winners-card">
+        <div class="card-header bg-gradient-warning text-white py-3">
+            <h5 class="card-title mb-0 fw-bold">
+                <i class="bi bi-trophy-fill me-2"></i>รายชื่อผู้โชคดี
+            </h5>
         </div>
-
-        <div style="max-height: 600px; overflow-y: auto;">
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                <table class="table table-hover mb-0 winners-table">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th scope="col" class="text-center" style="width: 15%;">ลำดับ</th>
+                            <th scope="col" style="width: 35%;">รหัสพนักงาน</th>
+                            <th scope="col" class="text-end" style="width: 50%;">รางวัล</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             @if (allWinners != null && allWinners.Count > 0)
             {
                 int i = 0;
                 foreach (var w in allWinners)
                 {
                     i++;
-                    string rowStyle = "background: transparent;";
-                    string rankDisplay = "ที่ " + i;
-                    string rankColor = "#64748b";
+                    string badgeClass = "bg-secondary";
                     string rankIcon = "🎁";
-                    string borderStyle = "border-bottom: 1px solid rgba(0,0,0,0.05);";
+                    string rowClass = "";
 
-                    if (i == 1) {
-                        rowStyle = "background: linear-gradient(90deg, #fefce8 0%, #ffffff 100%);";
-                        rankDisplay = "ที่ 1";
-                        rankColor = "#d97706";
+                    if (i == 1)
+                    {
+                        badgeClass = "bg-warning text-dark";
                         rankIcon = "🥇";
-                    } else if (i == 2) {
-                        rowStyle = "background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);";
-                        rankDisplay = "ที่ 2";
-                        rankColor = "#475569";
+                        rowClass = "table-warning";
+                    }
+                    else if (i == 2)
+                    {
+                        badgeClass = "bg-secondary";
                         rankIcon = "🥈";
-                    } else if (i == 3) {
-                        rowStyle = "background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%);";
-                        rankDisplay = "ที่ 3";
-                        rankColor = "#ea580c";
+                        rowClass = "table-light";
+                    }
+                    else if (i == 3)
+                    {
+                        badgeClass = "bg-danger";
                         rankIcon = "🥉";
+                        rowClass = "table-danger table-danger-light";
                     }
 
-                    if (i == allWinners.Count) {
-                        borderStyle = "border-bottom: none;";
-                    }
-
-                    <div class="row-hover grid grid-cols-3 gap-4 px-4 md:px-8 py-5 items-center" style="@rowStyle @borderStyle">
-                        <div class="flex items-center gap-2 md:gap-3">
-                            <span class="text-2xl md:text-3xl">@rankIcon</span> 
-                            <span class="font-bold text-sm md:text-lg" style="color: @rankColor;">@rankDisplay</span>
-                        </div>
-                        <div class="font-semibold text-sm md:text-base truncate" style="color: #1e293b;">
-                            @w.EmployeeID
-                        </div>
-                        <div class="text-right text-sm md:text-base" style="color: #b45309;">
-                            @w.PrizeName
-                        </div>
-                    </div>
+                                        <tr class="@rowClass">
+                                            <td class="text-center align-middle">
+                                                <span class="rank-emoji me-1">@rankIcon</span>
+                                                <span class="badge @badgeClass">ที่ @i</span>
+                                            </td>
+                                            <td class="align-middle fw-semibold">
+                                                <code class="text-dark">@w.EmployeeID</code>
+                                            </td>
+                                            <td class="align-middle text-end">
+                                                <span class="badge bg-primary-subtle text-primary px-3 py-2">
+                                                    @w.PrizeName
+                                                </span>
+                                            </td>
+                                        </tr>
                 }
             }
             else
             {
-                <div class="p-8 text-center" style="color: #94a3b8;">
-                    ยังไม่มีประกาศรายชื่อผู้โชคดี
-                </div>
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-5">
+                                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                                ยังไม่มีประกาศรายชื่อผู้โชคดี
+                                            </td>
+                                        </tr>
             }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

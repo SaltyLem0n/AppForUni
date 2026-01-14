@@ -126,18 +126,18 @@
     font-weight: 600;
 }
 
-    .search-input:focus {
-        outline: none;
-        border-color: var(--theme-pink);
-        box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
-    }
+.search-input:focus {
+    outline: none;
+    border-color: var(--theme-pink);
+    box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+}
 
-    .search-input::placeholder {
-        color: #94a3b8;
-        font-family: 'Segoe UI', sans-serif;
-        font-weight: 400;
-        font-size: 1rem;
-    }
+.search-input::placeholder {
+    color: #94a3b8;
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+}
 
 /* 4. Action Buttons */
 .btn-search-submit {
@@ -155,11 +155,11 @@
     margin-bottom: 2rem;
 }
 
-    .btn-search-submit:hover {
-        background-color: var(--theme-pink);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
-    }
+.btn-search-submit:hover {
+    background-color: var(--theme-pink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
 
 .divider {
     height: 1px;
@@ -181,15 +181,16 @@
     transition: all 0.2s;
 }
 
-    .btn-back-outline:hover {
-        background-color: #fff1f2;
-        border-color: var(--theme-pink);
-        color: var(--theme-pink);
-    }
+.btn-back-outline:hover {
+    background-color: #fff1f2;
+    border-color: var(--theme-pink);
+    color: var(--theme-pink);
+}
 
 /* 5. Modern Modal Styles */
 .modal-backdrop {
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
     position: fixed;
     inset: 0;
     background-color: rgba(15, 23, 42, 0.6);
@@ -219,7 +220,7 @@
     justify-content: space-between;
     align-content: center;
     align-items: stretch;
-    
+
 }
 
 @keyframes fadeIn {
@@ -249,9 +250,10 @@
     padding: 1.25rem 1.5rem;
     display: flex;
     align-items: center;
-    justify-content: center; /* FIX: Center Header Items */
+    justify-content: center;
+    /* FIX: Center Header Items */
     gap: 1rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .status-success {
@@ -283,8 +285,10 @@
     text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center X */
-    justify-content: center; /* Center Y */
+    align-items: center;
+    /* Center X */
+    justify-content: center;
+    /* Center Y */
     min-height: 100px;
 }
 
@@ -307,7 +311,110 @@
     transition: all 0.2s;
 }
 
-    .btn-modal-close:hover {
-        background-color: #f1f5f9;
-        color: #1e293b;
+.btn-modal-close:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+}
+
+/* --- Bootstrap Winners Table Enhancements --- */
+.winners-card {
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.winners-table thead th {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #64748b;
+    border-bottom: 2px solid #e2e8f0;
+    padding: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.winners-table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-color: #f1f5f9;
+}
+
+.winners-table tbody tr:hover {
+    background-color: #f8fafc;
+    transition: background-color 0.2s ease;
+}
+
+/* Special row styling for top 3 */
+.table-warning {
+    background-color: #fef3c7 !important;
+}
+
+.table-danger-light {
+    background-color: #fee2e2 !important;
+}
+
+.rank-emoji {
+    font-size: 1.5rem;
+    vertical-align: middle;
+}
+
+/* Badge enhancements */
+.badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.65rem;
+    font-weight: 600;
+}
+
+.bg-primary-subtle {
+    background-color: #dbeafe !important;
+}
+
+.text-primary {
+    color: #2563eb !important;
+}
+
+/* Sticky header */
+.sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8fafc;
+}
+
+/* Code styling for employee ID */
+code {
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: 0.95rem;
+    background-color: #f1f5f9;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .winners-table thead th {
+        font-size: 0.85rem;
+        padding: 0.75rem;
     }
+
+    .winners-table tbody td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    .rank-emoji {
+        font-size: 1.25rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+    }
+}
