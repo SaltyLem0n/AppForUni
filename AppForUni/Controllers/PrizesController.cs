@@ -34,10 +34,12 @@ namespace YourApp.Controllers
 
             var prizes = new List<(string PrizeName, string PrizeAmount)>
             {
-                ("รางวัลที่ 1",  "เงินรางวัล 10,000 บาท"),
-                ("รางวัลที่ 2",  "เงินรางวัล 8,000 บาท"),
-                ("รางวัลที่ 3",  "เงินรางวัล 6,000 บาท"),
-                ("รางวัลที่ 4",  "เงินรางวัล 5,000 บาท")
+                ("รางวัลที่ 1",  "เงินรางวัล 50,000 บาท"),
+                ("รางวัลที่ 2",  "เงินรางวัล 30,000 บาท"),
+                ("รางวัลที่ 3",  "เงินรางวัล 10,000 บาท"),
+                ("รางวัลที่ 4",  "เงินรางวัล 5,000 บาท"),
+                ("รางวัลที่ 5",  "เงินรางวัล 2,000 บาท"),
+                ("รางวัลที่ 6",  "เงินรางวัล 1,500 บาท")
             };
             return View(prizes);
         }
@@ -118,8 +120,16 @@ namespace YourApp.Controllers
             {
                 // -- Logic: Check Limits --
                 int limit = 1;
-                if (prizeName == "รางวัลที่ 3") limit = 10;
-                else if (prizeName == "รางวัลที่ 4") limit = 20;
+                switch (prizeName)
+                {
+                    case "รางวัลที่ 1": limit = 1; break;
+                    case "รางวัลที่ 2": limit = 5; break;
+                    case "รางวัลที่ 3": limit = 20; break;
+                    case "รางวัลที่ 4": limit = 50; break;
+                    case "รางวัลที่ 5": limit = 100; break;
+                    case "รางวัลที่ 6": limit = 100; break;
+                    default: limit = 1; break;
+                }
 
                 // Count current winners for THIS prize
                 var currentCount = await _db.PrizeAwards.CountAsync(x => x.PrizeName == prizeName);
