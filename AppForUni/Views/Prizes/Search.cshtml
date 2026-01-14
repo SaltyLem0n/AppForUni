@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
     @@importurl('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap');
@@ -413,6 +414,85 @@
         border-radius: 50%;
         animation: sparkle 1.5s ease-in-out infinite;
     }
+    
+    /* New Table Snippet Styles */
+    body {
+        box-sizing: border-box;
+    }
+    
+    .font-heading {
+        font-family: 'Playfair Display', Georgia, serif;
+    }
+    
+    @@keyframes shimmer-gold {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    
+    .gold-shimmer-text {
+        background: linear-gradient(90deg, #D4AF37 0%, #F5E7A3 25%, #D4AF37 50%, #F5E7A3 75%, #D4AF37 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer-gold 3s linear infinite;
+    }
+    
+    @@keyframes float-item {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .trophy-float-effect {
+        animation: float-item 3s ease-in-out infinite;
+    }
+    
+    @@keyframes sparkle-fade {
+        0%, 100% { opacity: 0; transform: scale(0); }
+        50% { opacity: 1; transform: scale(1); }
+    }
+    
+    .sparkle-effect {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #F5E7A3;
+        border-radius: 50%;
+        animation: sparkle-fade 2s ease-in-out infinite;
+    }
+    
+    .table-scroll-container {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(212, 175, 55, 0.5) rgba(255, 255, 255, 0.1);
+    }
+    
+    .table-scroll-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-thumb {
+        background: rgba(212, 175, 55, 0.5);
+        border-radius: 4px;
+    }
+    
+    .table-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(212, 175, 55, 0.7);
+    }
+    
+    .table-tbody-tr {
+        transition: all 0.2s ease;
+    }
+    
+    .table-tbody-tr:hover {
+        background: rgba(212, 175, 55, 0.1) !important;
+        transform: scale(1.005);
+    }
 </style>
 
 <div class="page-background-wrapper">
@@ -451,75 +531,79 @@
         </div>
     </div>
 
-    <!-- Winners Table Section - Gold Theme -->
-    <div class="winners-table-container">
-        <!-- Table Header -->
-        <div class="winners-table-header">
-            <div class="header-cell">อันดับ</div>
-            <div class="header-cell">รหัสพนักงาน</div>
-            <div class="header-cell text-right">รางวัล</div>
-        </div>
+   
+    <!-- Winners Table Section - Standalone Table with Light Theme -->
+    <div class="winners-table-wrapper-new w-full max-w-5xl mx-auto">
+        <!-- Table Container -> Light Theme -->
+        <div class="rounded-2xl overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border: 1px solid #e2e8f0; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); max-height: 70vh;">
+            <div class="table-scroll-container overflow-auto" style="max-height: 70vh;">
+                <table class="w-full text-left border-collapse" id="mainTable">
+                    <thead class="sticky top-0 z-10" style="background: #f1f5f9; border-bottom: 2px solid #e2e8f0;">
+                        <tr class="text-lg uppercase tracking-wider font-bold" style="color: #004aad;">
+                            <th class="p-4 min-w-[180px]">รางวัล </th>
+                            <th class="p-4 min-w-[80px] text-center">ลำดับ </th>
+                            <th class="p-4 min-w-[250px] text-right">รหัสบุคลากร </th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="text-sm divide-y" style="divide-color: #f1f5f9;">
+                        @if (allWinners != null && allWinners.Count > 0)
+                        {
+                            int i = 0;
+                            foreach (var w in allWinners)
+                            {
+                                i++;
+                                string emoji = "🎗️";
+                                // Default light bg
+                                string bgColor = "#ffffff"; 
+                                string amount = ""; 
+                                
+                                // Text Colors
+                                string prizeTextColor = "#1e293b"; // Slate-800
+                                string idTextColor = "#334155"; // Slate-700
+                                string rankTextColor = "#64748b"; // Slate-500
 
-        <!-- Table Body -->
-        <div class="winners-table-body">
-            @if (allWinners != null && allWinners.Count > 0)
-            {
-                int i = 0;
-                foreach (var w in allWinners)
-                {
-                    i++;
-                    string rankIcon = "🎁";
-                    string rankText = i + "th";
-                    string rankColor = "#9ca3af";
-                    string rowBg = "transparent";
-                    string prizeColor = "#9ca3af";
+                                // Infer style based on Prize Name
+                                if (w.PrizeName.Contains("รางวัลที่ 1")) { emoji = "🏆"; bgColor = "#fefce8"; amount = "50,000 บาท"; prizeTextColor = "#b45309"; } // Yellow-50
+                                else if (w.PrizeName.Contains("รางวัลที่ 2")) { emoji = "🥈"; bgColor = "#f8fafc"; amount = "30,000 บาท"; prizeTextColor = "#334155"; } // Slate-50
+                                else if (w.PrizeName.Contains("รางวัลที่ 3")) { emoji = "🥉"; bgColor = "#fff7ed"; amount = "10,000 บาท"; prizeTextColor = "#c2410c"; } // Orange-50
+                                else if (w.PrizeName.Contains("รางวัลที่ 4")) { emoji = "🎖️"; bgColor = "#f0f9ff"; amount = "5,000 บาท"; } // Sky-50
+                                else if (w.PrizeName.Contains("รางวัลที่ 5")) { emoji = "🎗️"; bgColor = "#fdf2f8"; amount = "2,000 บาท"; } // Pink-50
+                                else { emoji = "🎁"; bgColor = "#ffffff"; amount = ""; }
 
-                    if (i == 1)
-                    {
-                        rankIcon = "🥇";
-                        rankText = "1st";
-                        rankColor = "#FFD700";
-                        rowBg = "linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, transparent 100%)";
-                        prizeColor = "#F5E7A3";
-                    }
-                    else if (i == 2)
-                    {
-                        rankIcon = "🥈";
-                        rankText = "2nd";
-                        rankColor = "#C0C0C0";
-                        rowBg = "linear-gradient(90deg, rgba(192, 192, 192, 0.1) 0%, transparent 100%)";
-                        prizeColor = "#d1d5db";
-                    }
-                    else if (i == 3)
-                    {
-                        rankIcon = "🥉";
-                        rankText = "3rd";
-                        rankColor = "#CD7F32";
-                        rowBg = "linear-gradient(90deg, rgba(205, 127, 50, 0.1) 0%, transparent 100%)";
-                        prizeColor = "#d4a574";
-                    }
-
-                    <div class="winner-row row-hover" style="background: @rowBg;">
-                        <div class="winner-cell">
-                            <span class="rank-emoji-large">@rankIcon</span>
-                            <span class="rank-text" style="color: @rankColor;">@rankText</span>
-                        </div>
-                        <div class="winner-cell winner-name">
-                            @w.EmployeeID
-                        </div>
-                        <div class="winner-cell text-right prize-text" style="color: @prizeColor;">
-                            @w.PrizeName
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="empty-state">
-                    <div class="empty-icon">🏆</div>
-                    <div class="empty-text">ยังไม่มีประกาศรายชื่อผู้โชคดี</div>
-                </div>
-            }
+                                // Fallback logic
+                                if (i == 1 && !w.PrizeName.Contains("รางวัล")) { emoji = "🏆"; bgColor = "#fefce8"; prizeTextColor = "#b45309"; }
+                            
+                                <tr class="table-tbody-tr" style="background: @bgColor; transition: background-color 0.2s;">
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-2xl">@emoji</span>
+                                            <div>
+                                                <div class="font-semibold" style="color: @prizeTextColor;">@w.PrizeName</div>
+                                                <div class="text-xs" style="color: #64748b;">@amount</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="p-4 text-center font-semibold" style="color: @rankTextColor;">@i</td>
+                                    <td class="p-4 text-right font-mono font-bold text-lg" style="color: @idTextColor; letter-spacing: 0.05em;">@w.EmployeeID</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3" class="p-8 text-center text-gray-400">
+                                    ยังไม่มีประกาศรายชื่อผู้โชคดี
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Copy Button -->
+            <button id="copyBtn" class="w-full py-3 font-semibold text-sm transition-all duration-300 hover:bg-slate-50" style="background: white; color: #475569; border-top: 1px solid #e2e8f0;">
+                📋 Copy Table Content
+            </button>
         </div>
     </div>
 
@@ -568,11 +652,71 @@
     </div>
 </div>
 
+<div id="toast" class="fixed bottom-5 right-5 px-6 py-3 rounded-lg font-semibold shadow-2xl transition-all duration-300 z-50 transform translate-y-20 opacity-0" style="background: linear-gradient(135deg, #D4AF37 0%, #F5E7A3 100%); color: #1a1a2e;">
+   📋 Table content copied!
+</div>
+
 <script>
     function closePopup(id) {
         document.getElementById(id).style.display = 'none';
         document.getElementById('empSearch').value = ''; // Clear input on close
         document.getElementById('empSearch').focus();
+    }
+    
+    // Copy to Clipboard Functionality
+    function copyTableToClipboard() {
+        const table = document.getElementById('mainTable');
+        let textContent = '';
+        
+        // Headers
+        const headers = table.querySelectorAll('thead th');
+        headers.forEach((th, index) => {
+            textContent += th.textContent.trim();
+            if (index < headers.length - 1) textContent += '\t';
+        });
+        textContent += '\n';
+        
+        // Body
+        // We need to parse the HTML rows because we are using Razor to render them
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            if(cells.length > 0) {
+                 // Cell 1: Prize Name (nested in div)
+                 const prizeName = cells[0].querySelector('.font-semibold') ? cells[0].querySelector('.font-semibold').textContent.trim() : '';
+                 const amount = cells[0].querySelector('.opacity-75') ? cells[0].querySelector('.opacity-75').textContent.trim() : '';
+                 const emoji = cells[0].querySelector('.text-2xl') ? cells[0].querySelector('.text-2xl').textContent.trim() : '';
+                 
+                 // Cell 2: No
+                 const no = cells[1].textContent.trim();
+                 
+                 // Cell 3: ID
+                 const id = cells[2].textContent.trim();
+                 
+                 textContent += `${prizeName} ${emoji} (${amount})\t${no}\t${id}\n`;
+            }
+        });
+        
+        navigator.clipboard.writeText(textContent).then(() => {
+            showToast();
+        }).catch(err => {
+            console.error('Failed to copy:', err);
+        });
+    }
+
+    function showToast() {
+        const toast = document.getElementById('toast');
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
+        
+        setTimeout(() => {
+            toast.style.transform = 'translateY(20px)';
+            toast.style.opacity = '0';
+        }, 2000);
+    }
+    
+    if(document.getElementById('copyBtn')) {
+        document.getElementById('copyBtn').addEventListener('click', copyTableToClipboard);
     }
 
     // Animation Logic
