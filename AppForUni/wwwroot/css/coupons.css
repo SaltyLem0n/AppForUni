@@ -61,26 +61,34 @@ body {
     padding: 0;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    /* Use CSS Columns instead of Flexbox */
+    column-count: 2;
+    column-gap: 0;
+    column-fill: auto;
+    /* Ensure it fills the first column before moving to the second */
 }
 
 /* --- COUPON --- */
 .coupon {
-    width: 99mm;
-    /* Approx half A4 width taking margins into account */
+    width: 98mm;
+    /* Slightly reduced to ensure fit in column */
     height: 56mm;
-    /* Approx 1/5th A4 height */
     box-sizing: border-box;
     border: 1px dashed #ccc;
     position: relative;
     overflow: hidden;
     background: #fff;
     display: flex;
+    /* Internal layout remains flex */
     flex-direction: column;
     outline: 1px solid #eee;
-    margin: 3mm;
+    margin: 3mm auto;
+    /* Center in column */
+
+    /* Prevent breaking across columns/pages */
+    break-inside: avoid;
+    page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
 }
 
 /* Header Strip - White Background */
@@ -220,9 +228,11 @@ body {
 @media print {
     body {
         background: none;
-        padding: 0;
-        margin-left: 30px;
+        padding-bottom: 0px;
+        margin-left: 20px;
         margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: 20px;
     }
 
     .toolbar {
@@ -235,22 +245,22 @@ body {
         box-shadow: none;
         margin: 0;
         padding: 0;
-        /* Ensure Flexbox is used for side-by-side layout */
-        display: flex;
-        flex-wrap: wrap;
-        align-content: flex-start;
+        /* Ensure Columns are used for side-by-side layout */
+        column-count: 2;
+        column-gap: 0;
+        column-fill: auto;
+        display: block;
+        /* Override default if needed, though column-count usually implies block */
     }
 
     .coupon {
         border: 1px solid #ddd;
         outline: none;
-        /* Margin 3px as requested */
-        margin: 1px;
-        /* Adjust width to fit 2 per row with margins */
-        /* A4 width ~210mm. 2 items + margins need to fit. */
-        /* 98mm + 6mm(margins) = 104mm. 104 * 2 = 208mm. Fits nicely. */
+        /* Margin adjusted */
+        margin: 2px auto;
         width: 98mm;
         height: 56mm;
+        break-inside: avoid;
         page-break-inside: avoid;
     }
 
