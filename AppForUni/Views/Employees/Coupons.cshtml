@@ -2,27 +2,23 @@
 @{
     ViewData["Title"] = "คูปองจับรางวัล";
     Layout = null;
-    int counter = 1; // Start running number
+    int counter = 1;
 }
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8" />
     <title>พิมพ์คูปอง - RSU360</title>
     <link rel="stylesheet" href="~/css/coupons.css" />
     <script>
-        // Auto-print when page loads in a new tab
         window.addEventListener('load', function () {
-            // Small delay to ensure everything is rendered
             setTimeout(function () {
                 window.print();
             }, 500);
         });
     </script>
 </head>
-
 <body>
     <div class="toolbar">
         <button class="btn-back" onclick="window.close()">ปิดหน้าต่าง</button>
@@ -30,7 +26,9 @@
     </div>
 
     @{
-        int perPage = 10;
+        // CRITICAL: Set to 8. This guarantees exactly 2 columns of 4 items.
+        // If you leave this at 10, items 9 & 10 will break the page.
+        int perPage = 8;
     }
 
     @for (int i = 0; i < Model.Count; i += perPage)
@@ -39,51 +37,37 @@
             @foreach (var item in Model.Skip(i).Take(perPage))
             {
                 <div class="coupon">
-                    <!-- Header: Logo, Brand, and Running Number -->
                     <div class="c-header">
                         <div class="c-brand">
-                            <!-- Logo Image -->
                             <img src="~/images/logo.png" class="c-logo" alt="Logo" onerror="this.style.display='none'" />
                             <span>คูปองจับรางวัล</span>
                         </div>
                         <span class="c-number">NO. @counter</span>
                     </div>
 
-                    <!-- Body: Info and Barcode -->
                     <div class="c-body">
                         <div class="c-info">
                             <div class="c-dept">@item.Department</div>
-
-
                             <div class="c-value">@item.EmployeeID</div>
                             <div class="c-value">@item.EmployeeName</div>
-
-
-
                         </div>
                         <div class="c-code-area">
-                            <!-- Barcode -->
                             <img class="c-barcode-img" src="@item.BarcodeDataUri" />
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="c-footer">
                         งานเลี้ยงสังสรรค์ปีใหม่ 2569
                     </div>
                 </div>
-
-                // Increment running number
                 counter++;
             }
         </div>
 
-        // Page break logic handled by CSS, but extra div ensures clear separation if needed
         if (i + perPage < Model.Count)
         {
             <div style="page-break-after: always;"></div>
         }
     }
 </body>
-
 </html>

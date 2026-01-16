@@ -1,20 +1,21 @@
-﻿/* --- THEME VARIABLES FOR PRINT --- */
+﻿/* --- THEME VARIABLES --- */
 :root {
     --theme-blue: #004aad;
     --theme-pink: #e91e63;
 }
 
+/* 1. PAGE SETUP */
 @page {
     size: A4;
-    margin: 8mm;
+    margin: 0mm; /* Removes default printer margins */
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #111;
-    background-color: #555;
-    /* Dark bg for screen view */
+    background-color: #555; /* Dark layout for screen */
     margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -35,13 +36,13 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.toolbar button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
+    .toolbar button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
 .btn-back {
     background-color: #eee;
@@ -53,45 +54,50 @@ body {
     color: white;
 }
 
-/* --- SHEET --- */
+/* --- SHEET CONTAINER (THE FIX) --- */
 .sheet {
     background: white;
     width: 210mm;
-    min-height: 297mm;
-    padding: 0;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    /* Standard A4 Height for preview */
+    height: 297mm;
+    /* GRID LAYOUT - THE BULLETPROOF METHOD */
+    display: grid;
+    /* 1. Define exactly 2 columns of 95mm width */
+    grid-template-columns: 95mm 95mm;
+    /* 2. Define exactly 4 rows of auto height */
+    grid-template-rows: repeat(4, 56mm);
+    /* 3. THE MAGIC: Fill Vertical (Column) First! */
+    /* This forces order: 1,2,3,4 down the left, then 5,6,7,8 down the right */
+    grid-auto-flow: column;
+    /* Spacing */
+    column-gap: 5mm;
+    row-gap: 3mm;
+    /* Center the grid on the page */
+    justify-content: center;
+    padding-top: 10mm;
     margin-bottom: 20px;
-    /* Use CSS Columns instead of Flexbox */
-    column-count: 2;
-    column-gap: 0;
-    column-fill: auto;
-    /* Ensure it fills the first column before moving to the second */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
 }
 
-/* --- COUPON --- */
+/* --- COUPON ITEM --- */
 .coupon {
-    width: 98mm;
-    /* Slightly reduced to ensure fit in column */
-    height: 56mm;
+    /* Dimensions are controlled by the Grid, but we set 100% to fill the cell */
+    width: 100%;
+    height: 100%;
     box-sizing: border-box;
     border: 1px dashed #ccc;
     position: relative;
     overflow: hidden;
     background: #fff;
     display: flex;
-    /* Internal layout remains flex */
     flex-direction: column;
     outline: 1px solid #eee;
-    margin: 3mm auto;
-    /* Center in column */
-
-    /* Prevent breaking across columns/pages */
     break-inside: avoid;
     page-break-inside: avoid;
-    -webkit-column-break-inside: avoid;
 }
 
-/* Header Strip - White Background */
+/* --- INTERNAL ELEMENTS (Standard) --- */
 .c-header {
     background-color: white;
     color: var(--theme-blue);
@@ -127,27 +133,19 @@ body {
     border-radius: 4px;
 }
 
-/* Body */
 .c-body {
     flex-grow: 1;
     padding: 6px 12px;
     display: block;
-    /* Changed from flex to block to allow layering */
     position: relative;
 }
 
-/* Info Area (Text) - Blue Zone */
 .c-info {
     width: 100%;
-    /* Full Width */
     position: relative;
     z-index: 20;
-    /* Higher z-index to sit ON TOP of barcode */
-    /* Add a slight background or shadow if you want text to pop over barcode, 
-       but typically for print we just let it overlap cleanly. */
 }
 
-/* Department Name */
 .c-dept {
     color: var(--theme-blue);
     font-weight: 500;
@@ -157,18 +155,7 @@ body {
     border-bottom: 1px solid #eee;
     padding-bottom: 2px;
     display: block;
-    white-space: normal;
-    /* Wraps text */
-    overflow: visible;
     line-height: 1.2;
-}
-
-.c-label {
-    font-size: 9px;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
 }
 
 .c-value {
@@ -178,38 +165,26 @@ body {
     margin-bottom: 2px;
 }
 
-/* Barcode Area - Red Zone */
 .c-code-area {
-    /* Significantly Bigger */
     width: 230px;
-    /* Wider area */
     max-width: 80%;
-    /* Don't exceed container */
-    /* Positioned Bottom Right */
     position: absolute;
     right: 0px;
     bottom: 25px;
-    /* Lower z-index so text prints over it */
     z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-end;
-    opacity: 1;
-    /* Keep opaque for scanning reliability */
-    padding: 0;
-    margin: 0;
 }
 
 .c-barcode-img {
     width: 100%;
     height: auto;
-    /* Allow it to be tall */
     max-height: 40mm;
-    margin-bottom: 1px
+    margin-bottom: 1px;
 }
 
-/* Footer */
 .c-footer {
     background-color: var(--theme-blue);
     color: white;
@@ -221,18 +196,14 @@ body {
     font-weight: 600;
     position: relative;
     z-index: 30;
-    /* Footer stays on top */
 }
 
 /* --- PRINT MODE --- */
 @media print {
     body {
         background: none;
-        padding-bottom: 0px;
-        margin-left: 20px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-right: 20px;
+        padding-top: 0;
+        -webkit-print-color-adjust: exact;
     }
 
     .toolbar {
@@ -240,33 +211,26 @@ body {
     }
 
     .sheet {
-        width: 100%;
-        height: 100%;
         box-shadow: none;
         margin: 0;
-        padding: 0;
-        /* Ensure Columns are used for side-by-side layout */
-        column-count: 2;
-        column-gap: 0;
-        column-fill: auto;
-        display: block;
-        /* Override default if needed, though column-count usually implies block */
+        width: 100%;
+        /* Remove fixed height in print to allow natural flow if needed, 
+           but Grid holds the shape */
+        height: auto;
+        border: none;
+        /* Ensure Grid properties persist in print */
+        display: grid;
+        grid-template-columns: 95mm 95mm;
+        grid-template-rows: repeat(4, 56mm);
+        grid-auto-flow: column;
+        justify-content: center;
     }
 
     .coupon {
         border: 1px solid #ddd;
-        outline: none;
-        /* Margin adjusted */
-        margin: 2px auto;
-        width: 98mm;
-        height: 56mm;
-        break-inside: avoid;
-        page-break-inside: avoid;
     }
 
-    .c-header,
-    .c-footer,
-    .c-number {
+    .c-header, .c-footer, .c-number {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
