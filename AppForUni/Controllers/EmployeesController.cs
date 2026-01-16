@@ -43,7 +43,7 @@ namespace YourApp.Controllers
 
             var employees = await _db.Employees
                 .AsNoTracking()
-                .OrderBy(x => x.EmployeeID)
+                .OrderBy(x => x.ExcelRowOrder)
                 .ToListAsync();
             return View(employees);
         }
@@ -98,13 +98,20 @@ namespace YourApp.Controllers
                     var existing = await _db.Employees.FindAsync(id);
                     if (existing == null)
                     {
-                        _db.Employees.Add(new Employee { EmployeeID = id, EmployeeName = name, Department = dep });
+                        _db.Employees.Add(new Employee
+                        {
+                            EmployeeID = id,
+                            EmployeeName = name,
+                            Department = dep,
+                            ExcelRowOrder = r  // Save Excel row order
+                        });
                         added++;
                     }
                     else
                     {
                         existing.EmployeeName = name;
                         existing.Department = dep;
+                        existing.ExcelRowOrder = r;  // Update Excel row order
                         updated++;
                     }
                 }
@@ -126,7 +133,7 @@ namespace YourApp.Controllers
         {
             var employees = await _db.Employees
                 .AsNoTracking()
-                .OrderBy(x => x.EmployeeID)
+                .OrderBy(x => x.ExcelRowOrder)
                 .ToListAsync();
 
             var model = new List<EmployeeCouponVM>(employees.Count);

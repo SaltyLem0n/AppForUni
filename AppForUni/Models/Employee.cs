@@ -13,5 +13,8 @@ namespace YourApp.Models
 
         [Required, StringLength(200)]
         public string Department { get; set; } = default!;
+
+        // Track the order from Excel sheet (row number)
+        public int ExcelRowOrder { get; set; }
     }
 }

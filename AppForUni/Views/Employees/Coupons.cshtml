@@ -12,11 +12,20 @@
     <meta charset="utf-8" />
     <title>พิมพ์คูปอง - RSU360</title>
     <link rel="stylesheet" href="~/css/coupons.css" />
+    <script>
+        // Auto-print when page loads in a new tab
+        window.addEventListener('load', function () {
+            // Small delay to ensure everything is rendered
+            setTimeout(function () {
+                window.print();
+            }, 500);
+        });
+    </script>
 </head>
 
 <body>
     <div class="toolbar">
-        <button class="btn-back" onclick="window.history.back()">ย้อนกลับ</button>
+        <button class="btn-back" onclick="window.close()">ปิดหน้าต่าง</button>
         <button class="btn-print" onclick="window.print()">พิมพ์ / บันทึกเป็น PDF</button>
     </div>
 
@@ -45,11 +54,11 @@
                         <div class="c-info">
                             <div class="c-dept">@item.Department</div>
 
-                            
+
                             <div class="c-value">@item.EmployeeID</div>
                             <div class="c-value">@item.EmployeeName</div>
 
-                            
+
 
                         </div>
                         <div class="c-code-area">
